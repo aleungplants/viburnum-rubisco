@@ -1,4 +1,4 @@
-Code for analyses in Leung et al. unpublished manuscript
+Data and code for analyses in Leung et al. unpublished manuscript
 ================
 
 Here is an explanation for the files provided in each folder. As much as
