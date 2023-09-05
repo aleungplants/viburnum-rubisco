@@ -1,12 +1,11 @@
 Data and code for analyses in Leung et al. unpublished manuscript
 ================
 
-Here is an explanation for the files provided in each folder. As much as
-possible, I wrote the portable code, i.e., no need to enter any working
-directories. However, to do so R scripts will require installing the
-`here` package. Filepaths in Python scripts should work relative to the
-location of the script. Data files \>100 MB in size that can be
-generated with the scripts are not included.
+As much as possible, I wrote R code that does not require messing with
+working directories; this requires installing the `here` package.
+Filepaths in Python scripts should work relative to the location of the
+script. Data files \>100 MB in size that can be generated with the
+scripts are not included.
 
 /download:
 
