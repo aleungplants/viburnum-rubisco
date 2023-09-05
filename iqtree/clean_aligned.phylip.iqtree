@@ -1,0 +1,715 @@
+IQ-TREE 2.2.0 COVID-edition built Jun  1 2022
+
+Input file name: clean_aligned.phylip
+Type of analysis: ModelFinder + tree reconstruction + ultrafast bootstrap (5000 replicates)
+Random seed number: 689734
+
+REFERENCES
+----------
+
+To cite IQ-TREE please use:
+
+Bui Quang Minh, Heiko A. Schmidt, Olga Chernomor, Dominik Schrempf,
+Michael D. Woodhams, Arndt von Haeseler, and Robert Lanfear (2020)
+IQ-TREE 2: New models and efficient methods for phylogenetic inference
+in the genomic era. Mol. Biol. Evol., in press.
+https://doi.org/10.1093/molbev/msaa015
+
+To cite ModelFinder please use: 
+
+Subha Kalyaanamoorthy, Bui Quang Minh, Thomas KF Wong, Arndt von Haeseler,
+and Lars S Jermiin (2017) ModelFinder: Fast model selection for
+accurate phylogenetic estimates. Nature Methods, 14:587–589.
+https://doi.org/10.1038/nmeth.4285
+
+Since you used ultrafast bootstrap (UFBoot) please also cite: 
+
+Diep Thi Hoang, Olga Chernomor, Arndt von Haeseler, Bui Quang Minh,
+and Le Sy Vinh (2018) UFBoot2: Improving the ultrafast bootstrap
+approximation. Mol. Biol. Evol., 35:518–522.
+https://doi.org/10.1093/molbev/msx281
+
+SEQUENCE ALIGNMENT
+------------------
+
+Input data: 148 sequences with 1332 nucleotide sites
+Number of constant sites: 1251 (= 93.9189% of all sites)
+Number of invariant (constant or ambiguous constant) sites: 1251 (= 93.9189% of all sites)
+Number of parsimony informative sites: 55
+Number of distinct site patterns: 160
+
+ModelFinder
+-----------
+
+Best-fit model according to BIC: F81+F+R2
+
+List of models sorted by BIC scores: 
+
+Model                  LogL         AIC      w-AIC        AICc     w-AICc         BIC      w-BIC
+F81+F+R2          -3060.396    6588.793 -   0.0151    6689.048 -   0.0454    7804.291 +    0.316
+JC+R2             -3071.389    6604.778 - 5.09e-06    6702.218 - 6.28e-05    7804.693 +    0.259
+HKY+F+R2          -3057.423    6584.846 +    0.108    6686.050 +    0.203    7805.539 +    0.169
+K2P+R2            -3068.416    6600.833 - 3.66e-05    6699.206 - 0.000283    7805.942 +    0.138
+F81+F+I+I+R2      -3059.364    6588.728 -   0.0155    6689.933 -   0.0292    7809.421 -   0.0243
+JC+I+I+R2         -3070.398    6604.796 - 5.04e-06    6703.169 -  3.9e-05    7809.905 -   0.0191
+HKY+F+I+I+R2      -3056.382    6584.765 +    0.113    6686.924 +    0.131    7810.652 -   0.0131
+K2P+I+I+R2        -3067.417    6600.835 - 3.65e-05    6700.146 - 0.000177    7811.138 -   0.0103
+TPM3u+F+R2        -3056.732    6585.465 +   0.0795    6687.623 +   0.0927    7811.352 -  0.00926
+TPM2u+F+R2        -3056.767    6585.535 +   0.0767    6687.694 +   0.0895    7811.422 -  0.00894
+TPM2+R2           -3067.952    6601.905 - 2.14e-05    6701.216 - 0.000104    7812.209 -  0.00603
+K3Pu+F+R2         -3057.315    6586.630 -   0.0444    6688.789 +   0.0517    7812.517 -  0.00517
+TN+F+R2           -3057.423    6586.846 -   0.0398    6689.005 -   0.0464    7812.733 -  0.00464
+TNe+R2            -3068.317    6602.635 - 1.49e-05    6701.946 - 7.19e-05    7812.939 -  0.00419
+K3P+R2            -3068.379    6602.759 -  1.4e-05    6702.070 - 6.76e-05    7813.063 -  0.00394
+TPM3+R2           -3068.413    6602.826 - 1.35e-05    6702.137 - 6.54e-05    7813.130 -  0.00381
+TPM2u+F+I+I+R2    -3055.534    6585.069 +   0.0969    6688.188 +   0.0699    7816.150 -  0.00084
+TPM3u+F+I+I+R2    -3055.637    6585.274 +   0.0874    6688.393 +   0.0631    7816.356 - 0.000758
+TPM2+I+I+R2       -3066.784    6601.568 - 2.53e-05    6701.823 - 7.65e-05    7817.066 - 0.000532
+K3Pu+F+I+I+R2     -3056.291    6586.582 -   0.0455    6689.701 -   0.0328    7817.664 - 0.000394
+TN+F+I+I+R2       -3056.381    6586.761 -   0.0416    6689.880 -     0.03    7817.843 - 0.000361
+TNe+I+I+R2        -3067.360    6602.720 - 1.42e-05    6702.976 -  4.3e-05    7818.219 - 0.000299
+K3P+I+I+R2        -3067.379    6602.759 -  1.4e-05    6703.014 - 4.22e-05    7818.257 - 0.000293
+TPM3+I+I+R2       -3067.414    6602.828 - 1.35e-05    6703.083 - 4.07e-05    7818.326 - 0.000283
+TIM3+F+R2         -3056.743    6587.486 -   0.0289    6690.604 -   0.0209    7818.567 - 0.000251
+TIM2+F+R2         -3056.768    6587.536 -   0.0282    6690.655 -   0.0204    7818.618 - 0.000245
+TIM2e+R2          -3067.847    6603.694 - 8.75e-06    6703.949 - 2.64e-05    7819.192 - 0.000184
+TIM+F+R2          -3057.318    6588.635 -   0.0163    6691.754 -   0.0117    7819.717 - 0.000141
+TIMe+R2           -3068.281    6604.562 - 5.67e-06    6704.817 - 1.71e-05    7820.060 - 0.000119
+TIM3e+R2          -3068.318    6604.637 - 5.46e-06    6704.892 - 1.65e-05    7820.135 - 0.000115
+TIM2+F+I+I+R2     -3055.521    6587.042 -   0.0361    6691.126 -   0.0161    7823.318 - 2.33e-05
+TIM3+F+I+I+R2     -3055.632    6587.265 -   0.0323    6691.349 -   0.0144    7823.541 - 2.09e-05
+TIM2e+I+I+R2      -3066.699    6603.398 - 1.01e-05    6704.603 - 1.91e-05    7824.091 - 1.59e-05
+TVM+F+R2          -3056.020    6588.041 -   0.0219    6692.125 -  0.00976    7824.317 - 1.42e-05
+TIM+F+I+I+R2      -3056.290    6588.581 -   0.0167    6692.665 -  0.00745    7824.857 - 1.08e-05
+TIMe+I+I+R2       -3067.322    6604.644 - 5.44e-06    6705.848 - 1.02e-05    7825.337 - 8.51e-06
+TIM3e+I+I+R2      -3067.357    6604.714 - 5.25e-06    6705.918 - 9.87e-06    7825.407 - 8.21e-06
+TVMe+R2           -3067.908    6605.816 - 3.03e-06    6707.021 - 5.69e-06    7826.509 - 4.73e-06
+TVM+F+I+I+R2      -3054.730    6587.460 -   0.0293    6692.515 -  0.00803    7828.931 - 1.41e-06
+TVMe+I+I+R2       -3066.734    6605.467 -  3.6e-06    6707.626 -  4.2e-06    7831.355 -  4.2e-07
+GTR+F+R2          -3056.047    6590.095 -  0.00785    6695.150 -  0.00215    7831.565 - 3.78e-07
+SYM+R2            -3067.809    6607.619 - 1.23e-06    6709.777 - 1.43e-06    7833.506 - 1.43e-07
+GTR+F+I+I+R2      -3054.711    6589.422 -    0.011    6695.454 -  0.00185    7836.087 - 3.94e-08
+SYM+I+I+R2        -3066.646    6607.292 - 1.45e-06    6710.411 - 1.04e-06    7838.374 - 1.26e-08
+GTR+F+I+G4        -3061.871    6601.742 - 2.32e-05    6706.797 - 6.36e-06    7843.212 - 1.12e-09
+GTR+F+R3          -3056.005    6594.010 -  0.00111    6701.023 - 0.000114    7845.869 - 2.96e-10
+GTR+F+I+I+R3      -3053.245    6590.490 -  0.00644    6698.490 - 0.000405    7847.544 - 1.28e-10
+GTR+F+I           -3078.227    6632.455 - 4.97e-12    6736.539 - 2.21e-12    7868.731 - 3.21e-15
+GTR+F+G4          -3141.410    6758.821 - 1.81e-39    6862.905 - 8.04e-40    7995.097 - 1.17e-42
+GTR+F             -3266.821    7007.641 - 1.68e-93    7110.760 - 1.21e-93    8238.723 - 1.46e-95
+
+AIC, w-AIC   : Akaike information criterion scores and weights.
+AICc, w-AICc : Corrected AIC scores and weights.
+BIC, w-BIC   : Bayesian information criterion scores and weights.
+
+Plus signs denote the 95% confidence sets.
+Minus signs denote significant exclusion.
+
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: F81+F+R2
+
+Rate parameter R:
+
+  A-C: 1.0000
+  A-G: 1.0000
+  A-T: 1.0000
+  C-G: 1.0000
+  C-T: 1.0000
+  G-T: 1.0000
+
+State frequencies: (empirical counts from alignment)
+
+  pi(A) = 0.265
+  pi(C) = 0.2004
+  pi(G) = 0.252
+  pi(T) = 0.2826
+
+Rate matrix Q:
+
+  A   -0.9849    0.2685    0.3377    0.3787
+  C    0.3552    -1.072    0.3377    0.3787
+  G    0.3552    0.2685    -1.002    0.3787
+  T    0.3552    0.2685    0.3377   -0.9613
+
+Model of rate heterogeneity: FreeRate with 2 categories
+Site proportion and rates:  (0.9744,0.2865) (0.0256,28.15)
+
+ Category  Relative_rate  Proportion
+  1         0.2865         0.9744
+  2         28.15          0.0256
+
+MAXIMUM LIKELIHOOD TREE
+-----------------------
+
+Log-likelihood of the tree: -3034.0924 (s.e. 141.9959)
+Unconstrained log-likelihood (without tree): -5049.9059
+Number of free parameters (#branches + #model parameters): 234
+Akaike information criterion (AIC) score: 6536.1848
+Corrected Akaike information criterion (AICc) score: 6636.4401
+Bayesian information criterion (BIC) score: 7751.6831
+
+Total tree length (sum of branch lengths): 0.1432
+Sum of internal branch lengths: 0.0723 (50.5104% of tree length)
+
+WARNING: 56 near-zero internal branches (<0.0008) should be treated with caution
+         Such branches are denoted by '**' in the figure below
+
+NOTE: Tree is UNROOTED although outgroup taxon 'luzonicum' is drawn at root
+Numbers in parentheses are  ultrafast bootstrap support (%)
+
++**luzonicum
+|
+|                                                                                              +**lautum
+|                                                                                           +**| (66)
+|                                                                                           |  +**triphyllum
+|                                                                                        +**| (47)
+|                                                                                        |  |           +**tinoides
+|                                                                                        |  |        +**| (69)
+|                                                                                        |  |        |  |  +**sulcatum
+|                                                                                        |  |        |  +**| (71)
+|                                                                                        |  |        |     +**acutifoliu
+|                                                                                        |  |     +**| (64)
+|                                                                                        |  |     |  +**subsessile
+|                                                                                        |  |  +**| (63)
+|                                                                                        |  |  |  +**anabaptist
+|                                                                                        |  +**| (63)
+|                                                                                        |     +**glabratum
+|                                                                                     +**| (33)
+|                                                                                     |  |        +**stenocalyx
+|                                                                                     |  |     +--| (98)
+|                                                                                     |  |     |  +**microphyll
+|                                                                                     |  |  +**| (49)
+|                                                                                     |  |  |  +**loeseneri
+|                                                                                     |  +--| (67)
+|                                                                                     |     +--blandum
+|                                                                                  +--| (35)
+|                                                                                  |  +**lasiophyll
+|                                                                               +**| (21)
+|                                                                               |  |     +**obtusatum
+|                                                                               |  |  +**| (82)
+|                                                                               |  |  |  +**disjunctum
+|                                                                               |  +--| (100)
+|                                                                               |     +**stellato-t
+|                                                                            +--| (47)
+|                                                                            |  +**toronis
+|                                                                        +---| (42)
+|                                                                        |   |      +**dentatum
+|                                                                        |   +------| (99)
+|                                                                        |          +**scabrellum
+|                                                                     +**| (33)
+|                                                                     |  |  +**urceolatum
+|                                                                     |  +--| (98)
+|                                                                     |     +**taiwanianu
+|                                                                  +**| (9)
+|                                                                  |  +--propinquum
+|                                                               +--| (35)
+|                                                               |  |                                +--cassinoide
+|                                                               |  |                             +--| (92)
+|                                                               |  |                             |  +**nudum
+|                                                               |  |                          +**| (87)
+|                                                               |  |                          |  +**obovatum
+|                                                               |  |                       +--| (55)
+|                                                               |  |                       |  +**elatum
+|                                                               |  |                    +--| (64)
+|                                                               |  |                    |  |        +**prunifoliu
+|                                                               |  |                    |  |     +**| (71)
+|                                                               |  |                    |  |     |  +**rufidulum
+|                                                               |  |                    |  |  +**| (76)
+|                                                               |  |                    |  |  |  +**lentago
+|                                                               |  |                    |  +--| (90)
+|                                                               |  |                    |     +----acerifoliu
+|                                                               |  |                 +--| (25)
+|                                                               |  |                 |  |     +**mongolicum
+|                                                               |  |                 |  |  +**| (2)
+|                                                               |  |                 |  |  |  |     +**utile
+|                                                               |  |                 |  |  |  |  +--| (99)
+|                                                               |  |                 |  |  |  |  |  +**schensianu
+|                                                               |  |                 |  |  |  +**| (11)
+|                                                               |  |                 |  |  |     +**cotinifoli
+|                                                               |  |                 |  +**| (12)
+|                                                               |  |                 |     |        +**lantana
+|                                                               |  |                 |     |     +**| (63)
+|                                                               |  |                 |     |     |  +**bitchiuens
+|                                                               |  |                 |     |  +--| (99)
+|                                                               |  |                 |     |  |  +**burejaetic
+|                                                               |  |                 |     +**| (6)
+|                                                               |  |                 |        +--macrocepha
+|                                                               |  |              +**| (10)
+|                                                               |  |              |  +-----venustum
+|                                                               |  |           +**| (11)
+|                                                               |  |           |  +-----australe
+|                                                               |  |        +**| (7)
+|                                                               |  |        |  +**seemenii
+|                                                               |  |     +**| (20)
+|                                                               |  |     |  |  +**chinshanen
+|                                                               |  |     |  +**| (79)
+|                                                               |  |     |     +**glomeratum
+|                                                               |  |  +--| (27)
+|                                                               |  |  |  +**veitchii
+|                                                               |  +**| (14)
+|                                                               |     +**ayavacense
+|                                                            +**| (33)
+|                                                            |  |  +------clemensiae
+|                                                            |  +--| (42)
+|                                                            |     |  +**obtectum
+|                                                            |     +--| (44)
+|                                                            |        |  +**divaricatu
+|                                                            |        +**| (20)
+|                                                            |           |  +**furcatum
+|                                                            |           +**| (81)
+|                                                            |              +--sympodiale
+|                                                         +--| (38)
+|                                                         |  |                  +--plicatum
+|                                                         |  |              +---| (99)
+|                                                         |  |              |   +**hanceanum
+|                                                         |  |           +--| (53)
+|                                                         |  |           |  |     +**colebrooke
+|                                                         |  |           |  |  +--| (60)
+|                                                         |  |           |  |  |  |         +**lutescens
+|                                                         |  |           |  |  |  |      +**| (85)
+|                                                         |  |           |  |  |  |      |  +**pyramidatu
+|                                                         |  |           |  |  |  |  +---| (97)
+|                                                         |  |           |  |  |  |  |   +--amplifoliu
+|                                                         |  |           |  |  |  +--| (74)
+|                                                         |  |           |  |  |     |  +**awabuki
+|                                                         |  |           |  |  |     +--| (99)
+|                                                         |  |           |  |  |        +**odoratissi
+|                                                         |  |           |  +**| (56)
+|                                                         |  |           |     +**sieboldii
+|                                                         |  |        +--| (41)
+|                                                         |  |        |  |     +--grandiflor
+|                                                         |  |        |  |  +**| (87)
+|                                                         |  |        |  |  |  +**foetens
+|                                                         |  |        |  +--| (98)
+|                                                         |  |        |     +--nervosum
+|                                                         |  |     +--| (40)
+|                                                         |  |     |  +--subalpinum
+|                                                         |  |  +--| (87)
+|                                                         |  |  |  +------amplificat
+|                                                         |  +--| (83)
+|                                                         |     |        +--brachybotr
+|                                                         |     |     +--| (96)
+|                                                         |     |     |  +--henryi
+|                                                         |     |  +--| (96)
+|                                                         |     |  |  |  +**erubescens
+|                                                         |     |  |  +**| (82)
+|                                                         |     |  |     +**yunnanense
+|                                                         |     +--| (96)
+|                                                         |        |  +**taitoense
+|                                                         |        +**| (74)
+|                                                         |           |  +**suspensum
+|                                                         |           +**| (73)
+|                                                         |              +**farreri
+|                                                      +--| (40)
+|                                                      |  |       +**punctatum
+|                                                      |  |  +----| (100)
+|                                                      |  |  |    +--lepidotulu
+|                                                      |  +**| (55)
+|                                                      |     |         +**tinus
+|                                                      |     |      +**| (63)
+|                                                      |     |      |  +-----------treleasei
+|                                                      |     +------| (67)
+|                                                      |            +**rugosum
+|                                                   +--| (43)
+|                                                   |  |   +**edule
+|                                                   |  +---| (98)
+|                                                   |      |    +--trilobum
+|                                                   |      +----| (97)
+|                                                   |           |  +--opulus
+|                                                   |           +--| (96)
+|                                                   |              +**sargentii
+|                                                +**| (36)
+|                                                |  +------lantanoide
+|                                         +------| (99)
+|                                         |      |           +**atrocyaneu
+|                                         |      |        +**| (73)
+|                                         |      |        |  +**calvum
+|                                         |      |     +**| (53)
+|                                         |      |     |  +**davidii
+|                                         |      |  +--| (90)
+|                                         |      |  |  +--cinnamomif
+|                                         |      +--| (45)
+|                                         |         |   +**ellipticum
+|                                         |         +---| (99)
+|                                         |             |  +**rafinesqui
+|                                         |             +--| (99)
+|                                         |                +**bracteatum
+|                                      +--| (69)
+|                                      |  |          +**hispidulum
+|                                      |  |       +**| (79)
+|                                      |  |       |  +**vernicosum
+|                                      |  |  +----| (100)
+|                                      |  |  |    |  +**glaberrimu
+|                                      |  |  |    +**| (93)
+|                                      |  |  |       +--beccarii
+|                                      |  +**| (86)
+|                                      |     +--ternatum
+|                                   +--| (97)
+|                                   |  |  +**sambucinum
+|                                   |  +--| (99)
+|                                   |     +**leiocarpum
+|                               +---| (100)
+|                               |   |     +**ichangense
+|                               |   |  +**| (81)
+|                               |   |  |  +**flavescens
+|                               |   +**| (63)
+|                               |      |        +**cylindricu
+|                               |      |     +**| (77)
+|                               |      |     |  +**hebanthum
+|                               |      |  +--| (99)
+|                               |      |  |  +--coriaceum
+|                               |      +**| (46)
+|                               |         +--kansuense
+|                            +--| (97)
+|                            |  +**betulifoli
+|                         +**| (92)
+|                         |  +**hupehense
+|                  +------| (100)
+|                  |      |  +**foetidum
+|                  |      +**| (89)
+|                  |         +**mullaha
+|              +---| (99)
+|              |   +**orientale
+|           +--| (98)
+|           |  |  +**phlebotric
+|           |  +**| (93)
+|           |     +**wrightii
+|        +--| (43)
+|        |  |     +**dilatatum
+|        |  |  +**| (84)
+|        |  |  |  +**brachyandr
+|        |  +**| (38)
+|        |     +--formosanum
+|     +**| (36)
+|     |  +**lancifoliu
+|  +**| (90)
+|  |  +-----brevipes
++**| (91)
+|  +**corylifoli
+|
++**setigerum
+
+Tree in newick format:
+
+(luzonicum:0.0000009988,((((((((((((((((((((((((((((lautum:0.0000009988,triphyllum:0.0000009988)66:0.0000009988,((((tinoides:0.0000009988,(sulcatum:0.0000009988,acutifoliu:0.0000009988)71:0.0000009988)69:0.0000009988,subsessile:0.0000009988)64:0.0000009988,anabaptist:0.0000009988)63:0.0000009988,glabratum:0.0000009988)63:0.0000009988)47:0.0000009988,(((stenocalyx:0.0000009988,microphyll:0.0000009988)98:0.0007530941,loeseneri:0.0000009988)49:0.0000009988,blandum:0.0015383371)67:0.0007586072)33:0.0000012719,lasiophyll:0.0000009988)35:0.0007550838,((obtusatum:0.0000009988,disjunctum:0.0000009988)82:0.0000009988,stellato-t:0.0000009988)100:0.0015212216)21:0.0000022082,toronis:0.0000009988)47:0.0007734909,(dentatum:0.0000009988,scabrellum:0.0000009988)99:0.0039802822)42:0.0023569839,(urceolatum:0.0000009988,taiwanianu:0.0000009988)98:0.0015455700)33:0.0007496270,propinquum:0.0015305316)9:0.0000009988,(((((((((((cassinoide:0.0007524691,nudum:0.0000009988)92:0.0007585952,obovatum:0.0000009988)87:0.0000024013,elatum:0.0000009988)55:0.0007647797,(((prunifoliu:0.0000009988,rufidulum:0.0000009988)71:0.0000009988,lentago:0.0000009988)76:0.0000027978,acerifoliu:0.0030769500)90:0.0007650129)64:0.0007651506,((mongolicum:0.0000009988,((utile:0.0000009988,schensianu:0.0000009988)99:0.0007533838,cotinifoli:0.0000009988)11:0.0000022853)2:0.0000009988,(((lantana:0.0000009988,bitchiuens:0.0000009988)63:0.0000009988,burejaetic:0.0000009988)99:0.0007572661,macrocepha:0.0007524145)6:0.0000009988)12:0.0000009988)25:0.0007540098,venustum:0.0033897378)10:0.0000009988,australe:0.0033897060)11:0.0000009988,seemenii:0.0000009988)7:0.0000009988,(chinshanen:0.0000009988,glomeratum:0.0000009988)79:0.0000009988)20:0.0000009988,veitchii:0.0000009988)27:0.0007529157,ayavacense:0.0000009988)14:0.0000024009)35:0.0007577170,(clemensiae:0.0040288222,(obtectum:0.0000009988,(divaricatu:0.0000009988,(furcatum:0.0000009988,sympodiale:0.0013537136)81:0.0000024563)20:0.0000009988)44:0.0008156892)42:0.0007660785)33:0.0000026220,((((((plicatum:0.0007586111,hanceanum:0.0000009988)99:0.0023312503,((colebrooke:0.0000009988,(((lutescens:0.0000009988,pyramidatu:0.0000009988)85:0.0000009988,amplifoliu:0.0015280610)97:0.0023782774,(awabuki:0.0000009988,odoratissi:0.0000009988)99:0.0015576185)74:0.0007519689)60:0.0007555450,sieboldii:0.0000009988)56:0.0000022143)53:0.0015509754,((grandiflor:0.0007963061,foetens:0.0000009988)87:0.0000009988,nervosum:0.0007585507)98:0.0007654207)41:0.0007680873,subalpinum:0.0015400591)40:0.0007561514,amplificat:0.0041464173)87:0.0007633756,(((brachybotr:0.0008277886,henryi:0.0008024939)96:0.0008035033,(erubescens:0.0000009988,yunnanense:0.0000009988)82:0.0000009988)96:0.0007563726,(taitoense:0.0000009988,(suspensum:0.0000009988,farreri:0.0000009988)73:0.0000009988)74:0.0000009988)96:0.0007605317)83:0.0007599341)38:0.0007634104,((punctatum:0.0000009988,lepidotulu:0.0016052025)100:0.0032751438,((tinus:0.0007405545,treleasei:0.0068536228)63:0.0000153622,rugosum:0.0000009988)67:0.0041332211)55:0.0006802491)40:0.0015447525,(edule:0.0000025394,(trilobum:0.0020785953,(opulus:0.0013633241,sargentii:0.0000009988)96:0.0020520089)97:0.0030055295)98:0.0023282328)43:0.0007760850,lantanoide:0.0039780490)36:0.0000026861,((((atrocyaneu:0.0000009988,calvum:0.0000009988)73:0.0000009988,davidii:0.0000009988)53:0.0000009988,cinnamomif:0.0007581471)90:0.0015583120,(ellipticum:0.0000009988,(rafinesqui:0.0000009988,bracteatum:0.0000009988)99:0.0015298395)99:0.0023698476)45:0.0007575415)99:0.0038916169,(((hispidulum:0.0000009988,vernicosum:0.0000009988)79:0.0000009988,(glaberrimu:0.0000009988,beccarii:0.0015320248)93:0.0000009988)100:0.0031001198,ternatum:0.0015245602)86:0.0000009988)69:0.0012398457,(sambucinum:0.0000009988,leiocarpum:0.0000009988)99:0.0012503827)97:0.0021800385,((ichangense:0.0000009988,flavescens:0.0000009988)81:0.0000009988,(((cylindricu:0.0000009988,hebanthum:0.0000009988)77:0.0000023730,coriaceum:0.0007525685)99:0.0007524447,kansuense:0.0007524407)46:0.0000022200)63:0.0000020398)100:0.0023327507,betulifoli:0.0000020374)97:0.0007543444,hupehense:0.0000027949)92:0.0000025808,(foetidum:0.0000009988,mullaha:0.0000009988)89:0.0000021607)100:0.0039745609,orientale:0.0000009988)99:0.0023230338,(phlebotric:0.0000009988,wrightii:0.0000009988)93:0.0000009988)98:0.0015116903,((dilatatum:0.0000009988,brachyandr:0.0000009988)84:0.0000009988,formosanum:0.0007676802)38:0.0000009988)43:0.0007527440,lancifoliu:0.0000009988)36:0.0000023993,brevipes:0.0034072700)90:0.0000009988,corylifoli:0.0000009988)91:0.0000009988,setigerum:0.0000009988);
+
+CONSENSUS TREE
+--------------
+
+Consensus tree is constructed from 5000 bootstrap trees
+Log-likelihood of consensus tree: -3034.293096
+Robinson-Foulds distance between ML tree and consensus tree: 20
+
+Branches with support >0.000000% are kept (extended consensus)
+Branch lengths are optimized by maximum likelihood on original alignment
+Numbers in parentheses are bootstrap supports (%)
+
++**luzonicum
+|
+|                                                                                                                      +**lautum
+|                                                                                                                   +**|
+|                                                                                                                   |  +**undulatum
+|                                                                                                                +**|
+|                                                                                                                |  +**jucundum
+|                                                                                                             +--|
+|                                                                                                             |  +**jamesonii
+|                                                                                                          +--| (66)
+|                                                                                                          |  +--triphyllum
+|                                                                                                       +--| (47)
+|                                                                                                       |  |           +--tinoides
+|                                                                                                       |  |        +--| (69)
+|                                                                                                       |  |        |  |  +--sulcatum
+|                                                                                                       |  |        |  +--| (71)
+|                                                                                                       |  |        |     +--acutifoliu
+|                                                                                                       |  |     +--| (64)
+|                                                                                                       |  |     |  +--subsessile
+|                                                                                                       |  |  +--| (63)
+|                                                                                                       |  |  |  +--anabaptist
+|                                                                                                       |  +--| (63)
+|                                                                                                       |     +--glabratum
+|                                                                                                    +--| (33)
+|                                                                                                    |  |        +--stenocalyx
+|                                                                                                    |  |     +--| (98)
+|                                                                                                    |  |     |  +--microphyll
+|                                                                                                    |  |  +--| (49)
+|                                                                                                    |  |  |  +--loeseneri
+|                                                                                                    |  +--| (67)
+|                                                                                                    |     +--blandum
+|                                                                                                 +--| (35)
+|                                                                                                 |  +--lasiophyll
+|                                                                                              +--| (47)
+|                                                                                              |  |        +--obtusatum
+|                                                                                              |  |     +--| (82)
+|                                                                                              |  |     |  +--disjunctum
+|                                                                                              |  |  +--| (100)
+|                                                                                              |  |  |  +--stellato-t
+|                                                                                              |  +--| (28)
+|                                                                                              |     +--toronis
+|                                                                                          +---| (42)
+|                                                                                          |   |      +--dentatum
+|                                                                                          |   +------| (99)
+|                                                                                          |          +--scabrellum
+|                                                                                       +--| (33)
+|                                                                                       |  |  +--urceolatum
+|                                                                                       |  +--| (98)
+|                                                                                       |     +--taiwanianu
+|                                                                                    +--| (9)
+|                                                                                    |  |                                         +--cassinoide
+|                                                                                    |  |                                      +--| (92)
+|                                                                                    |  |                                      |  +--nudum
+|                                                                                    |  |                                   +--| (87)
+|                                                                                    |  |                                   |  +--obovatum
+|                                                                                    |  |                                +--| (55)
+|                                                                                    |  |                                |  +--elatum
+|                                                                                    |  |                             +--| (64)
+|                                                                                    |  |                             |  |        +--prunifoliu
+|                                                                                    |  |                             |  |     +--| (71)
+|                                                                                    |  |                             |  |     |  +--rufidulum
+|                                                                                    |  |                             |  |  +--| (76)
+|                                                                                    |  |                             |  |  |  +--lentago
+|                                                                                    |  |                             |  +--| (90)
+|                                                                                    |  |                             |     +----acerifoliu
+|                                                                                    |  |                          +--| (29)
+|                                                                                    |  |                          |  |           +**lantana
+|                                                                                    |  |                          |  |        +**|
+|                                                                                    |  |                          |  |        |  +**carlesii
+|                                                                                    |  |                          |  |     +--|
+|                                                                                    |  |                          |  |     |  +**maculatum
+|                                                                                    |  |                          |  |  +--| (63)
+|                                                                                    |  |                          |  |  |  +--bitchiuens
+|                                                                                    |  |                          |  +--| (99)
+|                                                                                    |  |                          |     +--burejaetic
+|                                                                                    |  |                       +--| (9)
+|                                                                                    |  |                       |  |  +--mongolicum
+|                                                                                    |  |                       |  +--| (13)
+|                                                                                    |  |                       |     +--cotinifoli
+|                                                                                    |  |                    +--| (9)
+|                                                                                    |  |                    |  |  +--utile
+|                                                                                    |  |                    |  +--| (99)
+|                                                                                    |  |                    |     +--schensianu
+|                                                                                    |  |                 +--| (25)
+|                                                                                    |  |                 |  +--macrocepha
+|                                                                                    |  |              +--| (10)
+|                                                                                    |  |              |  |           +**chinshanen
+|                                                                                    |  |              |  |        +**|
+|                                                                                    |  |              |  |        |  +**buddleifol
+|                                                                                    |  |              |  |     +**|
+|                                                                                    |  |              |  |     |  +**rhytidophy
+|                                                                                    |  |              |  |  +--|
+|                                                                                    |  |              |  |  |  +**congestum
+|                                                                                    |  |              |  +--| (79)
+|                                                                                    |  |              |     +--glomeratum
+|                                                                                    |  |           +--| (11)
+|                                                                                    |  |           |  +--seemenii
+|                                                                                    |  |        +--| (10)
+|                                                                                    |  |        |  +-----venustum
+|                                                                                    |  |     +--| (20)
+|                                                                                    |  |     |  +-----australe
+|                                                                                    |  |  +--| (27)
+|                                                                                    |  |  |  +--veitchii
+|                                                                                    |  +--| (14)
+|                                                                                    |     |     +**ayavacense
+|                                                                                    |     |  +**|
+|                                                                                    |     |  |  +**villosum
+|                                                                                    |     +--|
+|                                                                                    |        +**recognitum
+|                                                                                 +--| (35)
+|                                                                                 |  +--propinquum
+|                                                                              +--| (33)
+|                                                                              |  |  +------clemensiae
+|                                                                              |  +--| (42)
+|                                                                              |     |                    +**obtectum
+|                                                                              |     |                 +**|
+|                                                                              |     |                 |  +**pichinchen
+|                                                                              |     |              +**|
+|                                                                              |     |              |  +**hallii
+|                                                                              |     |           +**|
+|                                                                              |     |           |  +**discolor
+|                                                                              |     |        +**|
+|                                                                              |     |        |  +**stipitatum
+|                                                                              |     |     +**|
+|                                                                              |     |     |  +**ciliatum
+|                                                                              |     |  +--|
+|                                                                              |     |  |  +**microcarpu
+|                                                                              |     +--| (44)
+|                                                                              |        |  +--divaricatu
+|                                                                              |        +--| (20)
+|                                                                              |           |  +--furcatum
+|                                                                              |           +--| (81)
+|                                                                              |              +--sympodiale
+|                                                                           +--| (38)
+|                                                                           |  |                  +--plicatum
+|                                                                           |  |              +---| (99)
+|                                                                           |  |              |   +--hanceanum
+|                                                                           |  |           +--| (53)
+|                                                                           |  |           |  |     +--colebrooke
+|                                                                           |  |           |  |  +--| (60)
+|                                                                           |  |           |  |  |  |         +--lutescens
+|                                                                           |  |           |  |  |  |      +--| (85)
+|                                                                           |  |           |  |  |  |      |  +--pyramidatu
+|                                                                           |  |           |  |  |  |  +---| (97)
+|                                                                           |  |           |  |  |  |  |   +--amplifoliu
+|                                                                           |  |           |  |  |  +--| (74)
+|                                                                           |  |           |  |  |     |  +--awabuki
+|                                                                           |  |           |  |  |     +--| (99)
+|                                                                           |  |           |  |  |        +--odoratissi
+|                                                                           |  |           |  +--| (56)
+|                                                                           |  |           |     +--sieboldii
+|                                                                           |  |        +--| (41)
+|                                                                           |  |        |  |     +--grandiflor
+|                                                                           |  |        |  |  +--| (87)
+|                                                                           |  |        |  |  |  +--foetens
+|                                                                           |  |        |  +--| (98)
+|                                                                           |  |        |     +--nervosum
+|                                                                           |  |     +--| (40)
+|                                                                           |  |     |  +--subalpinum
+|                                                                           |  |  +--| (87)
+|                                                                           |  |  |  +------amplificat
+|                                                                           |  +--| (83)
+|                                                                           |     |        +--brachybotr
+|                                                                           |     |     +--| (96)
+|                                                                           |     |     |  +--henryi
+|                                                                           |     |  +--| (96)
+|                                                                           |     |  |  |           +**erubescens
+|                                                                           |     |  |  |        +**|
+|                                                                           |     |  |  |        |  +**brevitubum
+|                                                                           |     |  |  |     +**|
+|                                                                           |     |  |  |     |  +**chingii
+|                                                                           |     |  |  |  +--|
+|                                                                           |     |  |  |  |  +**oliganthum
+|                                                                           |     |  |  +--| (82)
+|                                                                           |     |  |     +--yunnanense
+|                                                                           |     +--| (96)
+|                                                                           |        |  +--taitoense
+|                                                                           |        +--| (74)
+|                                                                           |           |  +--suspensum
+|                                                                           |           +--| (73)
+|                                                                           |              +--farreri
+|                                                                        +--| (40)
+|                                                                        |  |       +--punctatum
+|                                                                        |  |  +----| (100)
+|                                                                        |  |  |    +--lepidotulu
+|                                                                        |  +--| (55)
+|                                                                        |     |         +--tinus
+|                                                                        |     |      +--| (63)
+|                                                                        |     |      |  +-----------treleasei
+|                                                                        |     +------| (67)
+|                                                                        |            +--rugosum
+|                                                                     +--| (43)
+|                                                                     |  |   +--edule
+|                                                                     |  +---| (98)
+|                                                                     |      |    +--trilobum
+|                                                                     |      +----| (97)
+|                                                                     |           |  +--opulus
+|                                                                     |           +--| (96)
+|                                                                     |              +--sargentii
+|                                                                  +--| (36)
+|                                                                  |  +------lantanoide
+|                                                           +------| (99)
+|                                                           |      |           +--atrocyaneu
+|                                                           |      |        +--| (73)
+|                                                           |      |        |  +--calvum
+|                                                           |      |     +--| (53)
+|                                                           |      |     |  +--davidii
+|                                                           |      |  +--| (90)
+|                                                           |      |  |  +--cinnamomif
+|                                                           |      +--| (45)
+|                                                           |         |   +--ellipticum
+|                                                           |         +---| (99)
+|                                                           |             |     +**rafinesqui
+|                                                           |             |  +--|
+|                                                           |             |  |  +**molle
+|                                                           |             +--| (99)
+|                                                           |                +--bracteatum
+|                                                        +--| (69)
+|                                                        |  |          +--hispidulum
+|                                                        |  |       +--| (79)
+|                                                        |  |       |  +--vernicosum
+|                                                        |  |  +----| (100)
+|                                                        |  |  |    |  +--glaberrimu
+|                                                        |  |  |    +--| (93)
+|                                                        |  |  |       +--beccarii
+|                                                        |  +--| (86)
+|                                                        |     +--ternatum
+|                                                     +--| (97)
+|                                                     |  |     +**sambucinum
+|                                                     |  |  +--|
+|                                                     |  |  |  +**inopinatum
+|                                                     |  +--| (99)
+|                                                     |     +--leiocarpum
+|                                                 +---| (100)
+|                                                 |   |           +**ichangense
+|                                                 |   |        +**|
+|                                                 |   |        |  +**melanocarp
+|                                                 |   |     +--|
+|                                                 |   |     |  +**lobophyllu
+|                                                 |   |  +--| (81)
+|                                                 |   |  |  +--flavescens
+|                                                 |   +--| (63)
+|                                                 |      |        +--cylindricu
+|                                                 |      |     +--| (77)
+|                                                 |      |     |  +--hebanthum
+|                                                 |      |  +--| (99)
+|                                                 |      |  |  +--coriaceum
+|                                                 |      +--| (46)
+|                                                 |         +--kansuense
+|                                              +--| (97)
+|                                              |  +--betulifoli
+|                                           +--| (92)
+|                                           |  +--hupehense
+|                                    +------| (100)
+|                                    |      |  +--foetidum
+|                                    |      +--| (89)
+|                                    |         +--mullaha
+|                                +---| (99)
+|                                |   +--orientale
+|                             +--| (98)
+|                             |  |  +--phlebotric
+|                             |  +--| (93)
+|                             |     +--wrightii
+|                          +**| (43)
+|                          |  |              +**dilatatum
+|                          |  |           +**|
+|                          |  |           |  +**adenophoru
+|                          |  |        +**|
+|                          |  |        |  +**erosum
+|                          |  |     +--|
+|                          |  |     |  +**fordiae
+|                          |  |  +--| (84)
+|                          |  |  |  +--brachyandr
+|                          |  +--| (38)
+|                          |     +--formosanum
+|                       +**| (46)
+|                       |  +-----brevipes
+|                    +--| (90)
+|                    |  +--lancifoliu
+|                 +--| (91)
+|                 |  +--corylifoli
+|              +--|
+|              |  +--setigerum
+|           +**|
+|           |  +**integrifol
+|        +**|
+|        |  +**tashiroi
+|     +**|
+|     |  +**sempervire
+|  +**|
+|  |  +**anamensis
++**|
+|  +**japonicum
+|
++**parvifoliu
+
+
+Consensus tree in newick format: 
+
+(luzonicum:0.0000000000,((((((((((((((((((((((((((((((((((((lautum:0.0000000000,undulatum:0.0000000000):0.0000000000,jucundum:0.0000000000):0.0000000000,jamesonii:0.0000000000):0.0000024658,triphyllum:0.0000024658)66:0.0000024658,((((tinoides:0.0000024658,(sulcatum:0.0000024658,acutifoliu:0.0000024658)71:0.0000024658)69:0.0000024658,subsessile:0.0000024658)64:0.0000024658,anabaptist:0.0000024658)63:0.0000024658,glabratum:0.0000024658)63:0.0000024658)47:0.0000024658,(((stenocalyx:0.0000024658,microphyll:0.0000024658)98:0.0007554956,loeseneri:0.0000024658)49:0.0000024658,blandum:0.0015403299)67:0.0007600767)33:0.0007555735,lasiophyll:0.0000024658)35:0.0000022190,(((obtusatum:0.0000024658,disjunctum:0.0000024658)82:0.0000024658,stellato-t:0.0000024658)100:0.0015231600,toronis:0.0000024658)28:0.0000024658)47:0.0007750893,(dentatum:0.0000021026,scabrellum:0.0000024658)99:0.0039842502)42:0.0023587101,(urceolatum:0.0000024658,taiwanianu:0.0000024658)98:0.0015475435)33:0.0007508441,((((((((((((((cassinoide:0.0007530655,nudum:0.0000024658)92:0.0007591957,obovatum:0.0000024658)87:0.0000024361,elatum:0.0000024658)55:0.0007653261,(((prunifoliu:0.0000024658,rufidulum:0.0000024658)71:0.0000024658,lentago:0.0000024658)76:0.0000024658,acerifoliu:0.0030803234)90:0.0007656133)64:0.0007657342,((((lantana:0.0000000000,carlesii:0.0000000000):0.0000000000,maculatum:0.0000000000):0.0000024658,bitchiuens:0.0000024658)63:0.0000024658,burejaetic:0.0000024658)99:0.0007587725)29:0.0000024658,(mongolicum:0.0000024658,cotinifoli:0.0000024658)13:0.0000024658)9:0.0000024658,(utile:0.0000024658,schensianu:0.0000024658)99:0.0007539393)9:0.0000024658,macrocepha:0.0007539192)25:0.0007584905,((((chinshanen:0.0000000000,buddleifol:0.0000000000):0.0000000000,rhytidophy:0.0000000000):0.0000000000,congestum:0.0000000000):0.0000024658,glomeratum:0.0000024658)79:0.0000024658)10:0.0000024658,seemenii:0.0000024658)11:0.0000024658,venustum:0.0033943278)10:0.0000024658,australe:0.0033944110)20:0.0000024658,veitchii:0.0000024658)27:0.0000022385,((ayavacense:0.0000000000,villosum:0.0000000000):0.0000000000,recognitum:0.0000000000):0.0000024658)14:0.0007447732)9:0.0000024658,propinquum:0.0015324514)35:0.0007591106,(clemensiae:0.0040326901,(((((((obtectum:0.0000000000,pichinchen:0.0000000000):0.0000000000,hallii:0.0000000000):0.0000000000,discolor:0.0000000000):0.0000000000,stipitatum:0.0000000000):0.0000000000,ciliatum:0.0000000000):0.0000000000,microcarpu:0.0000000000):0.0000024658,(divaricatu:0.0000024658,(furcatum:0.0000024658,sympodiale:0.0013547483)81:0.0000020840)20:0.0000023541)44:0.0008151177)42:0.0007686789)33:0.0000024658,((((((plicatum:0.0007598307,hanceanum:0.0000024658)99:0.0023334929,((colebrooke:0.0000024658,(((lutescens:0.0000024658,pyramidatu:0.0000024658)85:0.0000024658,amplifoliu:0.0015297291)97:0.0023797711,(awabuki:0.0000024658,odoratissi:0.0000024658)99:0.0015586468)74:0.0007532763)60:0.0007564164,sieboldii:0.0000024658)56:0.0000026091)53:0.0015520957,((grandiflor:0.0007975336,foetens:0.0000024658)87:0.0000024658,nervosum:0.0007598325)98:0.0007657756)41:0.0007687079,subalpinum:0.0015411087)40:0.0007570409,amplificat:0.0041510118)87:0.0007635752,(((brachybotr:0.0008292190,henryi:0.0008038832)96:0.0008048531,((((erubescens:0.0000000000,brevitubum:0.0000000000):0.0000000000,chingii:0.0000000000):0.0000000000,oliganthum:0.0000000000):0.0000024658,yunnanense:0.0000024658)82:0.0000024658)96:0.0007586117,(taitoense:0.0000024658,(suspensum:0.0000024658,farreri:0.0000024658)73:0.0000024658)74:0.0000024658)96:0.0007628319)83:0.0007612466)38:0.0007642716,((punctatum:0.0000024658,lepidotulu:0.0016068627)100:0.0032785498,((tinus:0.0007490000,treleasei:0.0068614207)63:0.0000076335,rugosum:0.0000024658)67:0.0041374546)55:0.0006812375)40:0.0015460193,(edule:0.0000024658,(trilobum:0.0020796987,(opulus:0.0013645994,sargentii:0.0000024683)96:0.0020530207)97:0.0030076397)98:0.0023303768)43:0.0007767658,lantanoide:0.0039818589)36:0.0000024658,((((atrocyaneu:0.0000024658,calvum:0.0000024658)73:0.0000024658,davidii:0.0000024658)53:0.0000024658,cinnamomif:0.0007586876)90:0.0015594660,(ellipticum:0.0000024658,((rafinesqui:0.0000000000,molle:0.0000000000):0.0000024658,bracteatum:0.0000024658)99:0.0015309820)99:0.0023717059)45:0.0007586508)99:0.0038942490,(((hispidulum:0.0000024658,vernicosum:0.0000024658)79:0.0000024658,(glaberrimu:0.0000024658,beccarii:0.0015322689)93:0.0000024658)100:0.0031022168,ternatum:0.0015256285)86:0.0000024658)69:0.0012406525,((sambucinum:0.0000000000,inopinatum:0.0000000000):0.0000024658,leiocarpum:0.0000024658)99:0.0012520931)97:0.0021812124,((((ichangense:0.0000000000,melanocarp:0.0000000000):0.0000000000,lobophyllu:0.0000000000):0.0000024658,flavescens:0.0000024658)81:0.0000024658,(((cylindricu:0.0000024658,hebanthum:0.0000024658)77:0.0000024658,coriaceum:0.0007536827)99:0.0007535645,kansuense:0.0007535657)46:0.0000024658)63:0.0000024658)100:0.0023341926,betulifoli:0.0000024658)97:0.0000024362,hupehense:0.0000024658)92:0.0007555407,(foetidum:0.0000024658,mullaha:0.0000024658)89:0.0000024658)100:0.0039778206,orientale:0.0000024658)99:0.0023238026,(phlebotric:0.0000024658,wrightii:0.0000024658)93:0.0000024658)98:0.0015125405,(((((dilatatum:0.0000000000,adenophoru:0.0000000000):0.0000000000,erosum:0.0000000000):0.0000000000,fordiae:0.0000000000):0.0000024658,brachyandr:0.0000024658)84:0.0000024658,formosanum:0.0007680938)38:0.0000024658)43:0.0000013454,brevipes:0.0034108406)46:0.0000014489,lancifoliu:0.0000024658)90:0.0007530512,corylifoli:0.0000024658)91:0.0000024658,setigerum:0.0000024658):0.0000024658,integrifol:0.0000000000):0.0000000000,tashiroi:0.0000000000):0.0000000000,sempervire:0.0000000000):0.0000000000,anamensis:0.0000000000):0.0000000000,japonicum:0.0000000000):0.0000000000,parvifoliu:0.0000000000);
+
+TIME STAMP
+----------
+
+Date and time: Fri Jun 09 11:38:23 2023
+Total CPU time used: 84.875 seconds (0h:1m:24s)
+Total wall-clock time used: 31.4125556 seconds (0h:0m:31s)
+

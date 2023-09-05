@@ -1,0 +1,2517 @@
+---
+title: "Viburnum rubisco evolution"
+author: "Arthur Leung"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+here::i_am("analyze/analyze.Rmd")
+```
+
+# Selection analyses
+
+## LRTs and model parameters from PAML site analyses. 
+
+The M1a vs. M0 comparison was used to determine whether there were a class of codon sites with nearly neutral evolution (0 \< ω \< 1), where ω is the ratio of nonsynonymous to synonymous codon substitutions. The M3 vs. M0 tested for variable ω between sites. The M2a vs. M1a and M8a vs. M7 comparisons were used were used to determined if there were codon sites under positive selection (ω \> 1). The M2a vs. M1a test is more stringent than M8 vs. M7, so to prevent false positives we used only the results of M2a for downstream analyses; also this was the better fitting model based on AIC.
+
+```{r paml}
+
+mlc <- readr::read_csv(here::here("analyze", "paml_site_mlc.csv"))
+knitr::kable(mlc)
+```
+
+## Model parameters from CSUBST analysis. 
+
+Branch pairs with at least one convergent substitution are shown.
+
+```{r csubst}
+
+csubst_site <- readr::read_csv(here::here("csubst", "analysis", "csubst_site_merged.csv")) %>%
+  filter(OCNany2spe > 0.9) %>%
+  dplyr::select(branch_id_1, branch_id_2, node1, node2, clade1, clade2, codon_site_alignment, starts_with("OC")) %>%
+  mutate(Site = as.character(codon_site_alignment + 31), .keep = "unused", .before = starts_with("OC"))
+knitr::kable(csubst_site)
+
+```
+
+## Positively selected, convergent sites
+
+```{r omega}
+rst <- readr::read_csv(here::here("analyze", "paml_site_omega.csv")) %>%
+  filter(NSSitesModel == 2) %>%
+  mutate(Site = as.character(Site))
+convergent_sites <- readr::read_csv(here::here("csubst", "analysis", "csubst_site_merged.csv")) %>%
+  filter(OCNany2spe > 0.9) %>%
+  dplyr::select(branch_id_1, branch_id_2, node1, node2, codon_site_alignment, OCNany2spe) %>%
+  distinct() %>%
+  mutate(Site = as.character(codon_site_alignment + 31)) %>% # align with full cds position
+  dplyr::select(!codon_site_alignment)
+
+combined_sites <- inner_join(rst, convergent_sites) %>%
+  filter(PosteriorProb > 0.9)
+readr::write_csv(combined_sites, here::here("analyze", "pos_selected_conv_sites.csv")) 
+
+```
+
+## Figure: Omega
+
+```{r}
+
+rst_labels <- full_join(rst, convergent_sites) %>%
+  mutate(PosSelectedSite = ifelse(PosteriorProb > 0.9, Site, ""),
+         ConvergentSite = ifelse(OCNany2spe > 0.9, "*", "")) %>%
+  mutate(ConvergentSite = tidyr::replace_na(ConvergentSite, "")) %>%
+  mutate(Label = paste(PosSelectedSite, ConvergentSite, sep = "")) %>%
+  distinct(Label, .keep_all = TRUE) %>%
+  filter(stringr::str_detect(Label, stringr::regex("^[:digit:]")))
+
+fig_omega <- ggplot(rst, aes(x = as.numeric(Site), y = w)) +
+  geom_ribbon(aes(ymin = w-SE, ymax = w+SE), fill = "grey60") +
+  geom_line(linewidth = 0.25) +
+  geom_point(data = filter(rst, PosteriorProb > 0.9),
+             shape = 21,
+             color = "black",
+             fill = "black",
+             size = 1,
+             alpha = 0.5,
+             stroke = 0.25) +
+  geom_text(data = filter(rst_labels, Site %in% c(76)), 
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = -2, nudge_y = 0.5) +
+  geom_text(data = filter(rst_labels, Site %in% c(95)), 
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = 2, nudge_y = 0.5) +
+  geom_text(data = filter(rst_labels, Site %in% c(157)), 
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = 0, nudge_y = 0.5) +
+  geom_text(data = filter(rst_labels, Site %in% c(219)), 
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = -18, nudge_y = 0) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(225)), 
+                           aes(label = Label),
+                           size = 2.5,
+                           min.segment.length = 0.1,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           xlim = c(NA, 232), ylim = c(10.5, NA)) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(226)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = -5, nudge_y = 2) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(230)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 6, nudge_y = 1.65) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(249)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 0, nudge_y = 2.5) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(251)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 14, nudge_y = 1.9) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(255)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 28, nudge_y = 2.5) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(262)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 28, nudge_y = 1.3) +
+  geom_text(data = filter(rst_labels, Site %in% c(279)),
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = 14, nudge_y = 0.4) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(309)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 0, nudge_y = 2.2) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(317)),
+                           aes(label = Label),
+                           size = 2.5,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 10, nudge_y = 1.6) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(328)),
+                           aes(label = Label),
+                           size = 2.5,
+                           min.segment.length = 0.1,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 15, nudge_y = 1) +
+  geom_text(data = filter(rst_labels, Site %in% c(340)),
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = 18, nudge_y = 0) +
+  geom_text(data = filter(rst_labels, Site %in% c(429)),
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = -18, nudge_y = 0) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(449)),
+                           aes(label = Label),
+                           size = 2.5,
+                           min.segment.length = 0.1,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = -10, nudge_y = 1) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(461)),
+                           aes(label = Label),
+                           size = 2.5,
+                           min.segment.length = 0.1,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 0, nudge_y = 2.2) +
+  ggrepel::geom_text_repel(data = filter(rst_labels, Site %in% c(472)),
+                           aes(label = Label),
+                           size = 2.5,
+                           min.segment.length = 0.1,
+                           segment.linetype = "dotted",
+                           segment.size = 0.25,
+                           nudge_x = 5, nudge_y = 1) +
+  geom_text(data = filter(rst_labels, Site %in% c(475)),
+                           aes(label = Label),
+                           size = 2.5,
+                           nudge_x = 20, nudge_y = 0) +
+  cowplot::theme_cowplot() +
+  xlab("Codon site") + 
+  scale_x_continuous(breaks = seq(from = 25, to = 475, by = 50)) +
+  ylab(expression(omega))
+# ggsave(here::here("analyze", "plots", "fig_omega.svg"), width = 4, height = 3)
+
+```
+
+# Climate analyses
+
+## Extract climate and amino acid data
+
+```{r worldclim}
+
+# Read data
+gbif <- readr::read_csv(here::here("download_gbif", "gbif_data", "clean.csv")) %>%
+  dplyr::filter(!if_any(c(decimalLongitude, decimalLatitude), ~ is.na(.)))
+taxon_keys <- readr::read_csv(here::here("download_gbif", "supplemental", "taxon_keys.csv")) %>%
+  dplyr::select(speciesKey, verbatim_name) %>%
+  distinct()
+
+# Create SpatialPointsDataFrame
+gbif_coords <- gbif %>%
+  dplyr::select(decimalLongitude, decimalLatitude) %>%
+  sp::SpatialPointsDataFrame(coords = ., data = gbif) 
+
+# Get list of Bioclim files, specify files of interest using regex
+bioclim_files <- list.files(here::here("download_gbif", "wc2.1_30s_bio"), 
+                              pattern = "_(1|4|10|11|12).tif") 
+# Iterate over the list of files and raster each, returning a list of raster objects
+bioclim_raster <-  purrr::map(here::here("download_gbif", "wc2.1_30s_bio", bioclim_files), ~ raster::raster(.))
+# Stack the raster objects
+bioclim_stack <- raster::stack(bioclim_raster)
+# Extract data from the raster stack
+bioclim_extracted <- raster::extract(bioclim_stack, gbif_coords, method = 'simple', sp = TRUE) %>%
+  as.data.frame() %>%
+  rename(
+    MeanTempAnnual = wc2.1_30s_bio_1,
+    TempSeasonality = wc2.1_30s_bio_4,
+    MeanTempWarmQuarter = wc2.1_30s_bio_10,
+    MeanTempColdQuarter = wc2.1_30s_bio_11,
+    PrecipAnnual = wc2.1_30s_bio_12
+    ) %>%
+  dplyr::select(!verbatim_name) %>% # species key = query term, from the name from the phylogeny > genbank accession
+  right_join(., taxon_keys, by = "speciesKey", multiple = "all") %>%
+  filter(!if_any(c(MeanTempAnnual, TempSeasonality, MeanTempWarmQuarter, MeanTempColdQuarter, PrecipAnnual), ~ is.na(.x))) %>%
+  mutate(TempSeasonality = TempSeasonality/100)
+
+# Get short name (match phylogeny) and write file
+bioclim <- bioclim_extracted %>%
+  rename(Species = verbatim_name) %>%
+  dplyr::select(c(Species, MeanTempAnnual, TempSeasonality, MeanTempWarmQuarter, MeanTempColdQuarter, PrecipAnnual)) %>%
+  mutate(ShortName = stringr::str_extract(Species, stringr::regex("(?<=\\s)(.{1,10})")), .after = Species)
+
+readr::write_csv(bioclim, here::here("analyze", "bioclim.csv"))
+
+# Get summary statistics and write to file
+bioclim_summary <- bioclim %>%
+  group_by(Species, ShortName) %>%
+  summarise(across(.cols = c(MeanTempAnnual, TempSeasonality, MeanTempWarmQuarter, MeanTempColdQuarter, PrecipAnnual), 
+                   .fns = list(n = ~ length(.),
+                               mean = ~ mean(.),
+                               se = ~ sd(.)/length(.),
+                               median = ~ median(.),
+                               q10 = ~ quantile(., 0.1),
+                               q90 = ~ quantile(., 0.9)),
+                   .names = "{.col}_{.fn}"))
+
+readr::write_csv(bioclim_summary, here::here("analyze", "bioclim_summary.csv"))
+
+```
+
+```{r aa}
+
+arc <- readr::read_csv(here::here("analyze", "paml_site_arc.csv")) %>%
+  filter(ID == 149) %>% # node 149 is the root node
+  dplyr::select(Site, AA, PosteriorProb) %>%
+  rename(AA_Ancestral = AA,
+         AA_A_PosteriorProb = PosteriorProb)
+
+pos_sel <- readr::read_csv(here::here("analyze", "aa_at_sites.csv")) %>%
+  tidyr::pivot_longer(cols = matches(stringr::regex("[:digit:]+")),
+                      names_to = "Site",
+                      values_to = "AA") %>%
+  mutate(Site = as.numeric(Site))
+
+aa <- inner_join(pos_sel, arc, by = "Site") %>%
+  mutate(Ancestral = ifelse(AA == AA_Ancestral,
+                            TRUE,
+                            ifelse(AA == "-",
+                                   NA,
+                                   FALSE)))
+
+sub_groups <- aa %>%
+  filter(Ancestral == FALSE) %>%
+  group_by(Site, AA_Ancestral, Ancestral) %>%
+  summarise(Substitution = paste(unique(AA), collapse = "/")) %>%
+  mutate(Substitution = paste(AA_Ancestral, Site, Substitution, sep = "")) %>%
+  dplyr::select(!c(AA_Ancestral, Ancestral))
+
+aa <- full_join(aa, sub_groups, by = c("Site", "AA_Ancestral"))
+
+readr::write_csv(aa, here::here("analyze", "aa_at_sites_ancestral.csv"))
+
+```
+
+
+<!-- # Mean annual temperature and precipitation. Points and error bars represent median and 10th/90th percentile for each species. Points and the surrounding convex hull were colored according to whether they are identical to the ancestral state (grey, estimated by PAML) or modified (red). -->
+
+<!-- ```{r whittaker} -->
+
+<!-- bioclim_summary <- readr::read_csv(here::here("analyze", "bioclim_summary.csv")) -->
+<!-- aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) -->
+<!-- sites_of_interest <- readr::read_csv(here::here("analyze", "pos_selected_conv_sites.csv")) %>% -->
+<!--   pull(Site) %>% -->
+<!--   unique() -->
+
+<!-- bioclim_aa <- full_join(bioclim_summary, aa) %>% -->
+<!--   filter(!is.na(Ancestral), -->
+<!--          Site %in% sites_of_interest) -->
+
+<!-- fig_s2 <- ggplot(bioclim_aa, aes(x = MeanTempAnnual_median, y = PrecipAnnual_median)) + -->
+<!--   ggforce::geom_mark_hull(aes(fill = Ancestral, color = Ancestral), concavity = 5) + -->
+<!--   geom_errorbar(aes(xmin = MeanTempAnnual_q10, xmax = MeanTempAnnual_q90, color = Ancestral)) + -->
+<!--   geom_errorbar(aes(ymin = PrecipAnnual_q10, ymax = PrecipAnnual_q90, color = Ancestral)) + -->
+<!--   geom_point(shape = 21, aes(fill = Ancestral)) + -->
+<!--   scale_fill_manual(values = c("brown2", "grey")) + -->
+<!--   scale_color_manual(values = c("darkred", "grey50")) + -->
+<!--   cowplot::theme_cowplot() + -->
+<!--   theme(legend.position = "none") + -->
+<!--   xlab("Mean annual temperature (°C)") + -->
+<!--   ylab("Mean annual precipitation (mm)") + -->
+<!--   facet_wrap(~ Substitution) -->
+<!-- fig_s2 -->
+
+<!-- # ggsave(here::here("analyze", "plots", "fig_s2.svg")) -->
+
+<!-- ``` -->
+
+
+## Leung et al.
+
+### Read data
+
+```{r clim_vars_stats}
+
+bioclim_summary <- readr::read_csv(here::here("analyze", "bioclim_summary.csv"))
+aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv"))
+
+sites_of_interest <- readr::read_csv(here::here("analyze", "pos_selected_conv_sites.csv")) %>%
+  pull(Site) %>%
+  unique()
+
+bioclim_aa <- inner_join(bioclim_summary, aa, by = "ShortName") %>%
+  filter(!is.na(Ancestral),
+         Site %in% sites_of_interest) %>%
+  mutate(AA = reorder(AA, desc(Ancestral))) %>%
+  dplyr::select(!contains(c("_mean", "_se", "_q10", "_q90"))) %>%
+  tidyr::pivot_longer(cols = contains("_median"),
+                      names_to = "ClimateVariable",
+                      values_to = "ClimateValue") %>%
+  group_by(ClimateVariable) %>%
+  arrange(Site, Ancestral, ClimateValue, .by_group = TRUE) %>%
+  distinct(Site, AA, ClimateVariable, ClimateValue, .keep_all = TRUE)
+ancestral_aa <- bioclim_aa %>%
+  ungroup() %>%
+  select(Site, AA_Ancestral) %>%
+  unique()
+
+bioclim_aa_summary <- bioclim_aa %>%
+  group_by(ClimateVariable, Site, AA) %>%
+  summarise(across(.cols = ClimateValue,
+                   .fns = list(n = length,
+                               Mean = mean,
+                               SE = ~sd(.)/length(.)),
+                   .names = "{.col}{.fn}"))
+readr::write_csv(bioclim_aa_summary, here::here("analyze", "bioclim_aa_summary.csv"))
+
+# NONPHYLOGENETIC STATS
+
+# pairwise_tests <- bioclim_aa %>%
+#   group_by(ClimateVariable, Site) %>%
+#   rstatix::t_test(formula = ClimateValue ~ AA, p.adjust.method =  "bonferroni", ref.group = "all") %>%
+#   rstatix::add_significance(cutpoints = c(0, 0.001, 0.01, 0.05, 1),
+#                             symbols = c("***", "**", "*", "")) %>%
+#   # filter(p.adj.signif != "ns") %>%
+#   group_by(ClimateVariable) %>%
+#   rstatix::add_xy_position(fun = "mean_se", x = "AA", scales = "free", step.increase = 0) %>%
+#   full_join(., ancestral_aa, by = "Site") %>%
+#   mutate(AA = group1,
+#          Ancestral = ifelse(AA == AA_Ancestral, TRUE, FALSE),
+#          ClimateValue = y.position)
+```
+
+### Stats 
+
+No need to run if already ran
+
+```{r}
+# PHYLOGENETIC ANOVA
+
+tree <- ape::read.tree(here::here("csubst", "radseq_pruned_csubst.tre"))
+
+stats <- bioclim_aa %>%
+  select(ShortName, Site, AA, ClimateVariable, ClimateValue) %>%
+  group_by(Site, ClimateVariable) %>%
+  tidyr::nest(.key = "Data") %>%
+  mutate(Tree = purrr::map(Data, ~ ape::keep.tip(tree, .$ShortName))) %>%
+  mutate(Groups = purrr::map(Data, ~ select(., "ShortName", "AA") %>% tibble::deframe())) %>%
+  mutate(ResponseVar = purrr::map(Data, ~ select(., "ShortName", "ClimateValue") %>% tibble::deframe())) %>% # select + deframe is more readable than setNames
+  rowwise() %>%
+  # head(1) %>% # for testing with a smaller dataframe
+  # mutate(ANOVAP = phytools::phylANOVA(tree = purrr::pluck(Tree),
+  #                                    x = purrr::pluck(Groups) %>% droplevels(), # droplevels will drop the unused levels
+  #                                    y = purrr::pluck(ResponseVar),
+  #                                    posthoc = TRUE,
+  #                                    nsim = 1000,
+  #                                    p.adj = "none")$Pf) %>%  # Pt attribute has the adjusted P values
+  mutate(PostHoc = phytools::phylANOVA(tree = purrr::pluck(Tree),
+                                     x = purrr::pluck(Groups) %>% droplevels(), # droplevels will drop the unused levels
+                                     y = purrr::pluck(ResponseVar),
+                                     posthoc = TRUE,
+                                     nsim = 1000,
+                                     p.adj = "none")$Pt %>%  # Pt attribute has the adjusted P values
+           as_tibble(rownames = "group1") %>%
+           list()) %>% # list puts the tibble into an object of length 1 (to fit into one cell)
+  mutate(PostHoc = tidyr::pivot_longer(PostHoc, cols = !contains("group"), names_to = "group2", values_to = "p.adj") %>%
+           list()) %>% # turn table with combos of groups and p values to group1, group2, p
+  tidyr::unnest(PostHoc) %>%
+  mutate(groups = stringr::str_c(group1, group2, sep = "-"), .before = "p.adj") %>% 
+  select(Site, ClimateVariable, groups, p.adj) %>%
+  group_by(Site, ClimateVariable) %>% 
+  tidyr::nest(.key = "PostHoc") %>%
+  mutate(PostHoc = purrr::map(PostHoc, ~ tibble::deframe(.))) %>% 
+  mutate(Letters = purrr::map(PostHoc, ~ multcompView::multcompLetters(.)$Letters %>%
+           as_tibble(rownames = "AA") %>%
+           rename(Letter = value))) %>%
+  tidyr::unnest(Letters) %>%
+  rowwise() %>%
+  mutate(Signif = any(purrr::pluck(PostHoc) < 0.05)) %>%
+  mutate(Letter = ifelse(Signif, Letter, "")) 
+
+readr::write_csv(stats, here::here("analyze", "phy_anova.csv"))
+
+
+```
+
+## Edwards 2017 Am Nat
+
+### Read data
+
+```{r}
+
+climond <- readr::read_csv(here::here("edwards_climate", "120_taxa_data.csv")) %>%
+  select(species, bio06, bio15) %>%
+  rename(Species = species,
+         MeanTempColdWeek = bio06,
+         PrecipSeasonality = bio15)
+
+sites_of_interest <- readr::read_csv(here::here("analyze", "pos_selected_conv_sites.csv")) %>%
+  pull(Site) %>%
+  unique()
+
+full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>%
+  rename(Species = species) %>%
+  dplyr::select(Species) %>%
+  mutate(ShortName = stringr::str_sub(Species, 1, 10), .before = "Species")
+aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>% 
+  full_join(full_specific_epithet) %>%
+  filter(AA != "-")
+
+ancestral_aa <- aa %>%
+  ungroup() %>%
+  select(Site, AA_Ancestral) %>%
+  unique()
+
+climond_aa <- inner_join(climond, aa) %>%
+  filter(!is.na(Ancestral),
+         Site %in% sites_of_interest) %>%
+  mutate(AA = reorder(AA, desc(Ancestral))) %>%
+  tidyr::pivot_longer(cols = c(MeanTempColdWeek, PrecipSeasonality),
+                      names_to = "ClimateVariable",
+                      values_to = "ClimateValue") %>%
+  group_by(ClimateVariable) %>%
+  arrange(Site, Ancestral, ClimateValue, .by_group = TRUE) %>%
+  distinct(Site, AA, ClimateVariable, ClimateValue, .keep_all = TRUE)
+
+climond_aa_summary <- climond_aa %>%
+  group_by(ClimateVariable, Site, AA) %>%
+  summarise(across(.cols = ClimateValue,
+                   .fns = list(n = length,
+                               Mean = mean,
+                               SE = ~sd(.)/length(.)),
+                   .names = "{.col}{.fn}"))
+
+# NONPHYLOGENETIC TEST
+# 
+# pairwise_tests <- climond_aa %>%
+#   group_by(ClimateVariable, Site) %>%
+#   rstatix::t_test(formula = ClimateValue ~ AA, p.adjust.method =  "bonferroni", ref.group = "all") %>%
+#   rstatix::add_significance(cutpoints = c(0, 0.001, 0.01, 0.05, 1),
+#                             symbols = c("***", "**", "*", "")) %>%
+#   group_by(ClimateVariable) %>%
+#   rstatix::add_xy_position(fun = "mean_se", x = "AA", scales = "free", step.increase = 0) %>%
+#   full_join(., ancestral_aa, by = "Site") %>%
+#   mutate(AA = group1,
+#          Ancestral = ifelse(AA == AA_Ancestral, TRUE, FALSE),
+#          ClimateValue = y.position)
+
+```
+
+### Stats
+
+No need to run if already ran
+
+```{r}
+
+# PHYLOGENETIC ANOVA
+
+tree <- ape::read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>%
+  treeio::rename_taxa(full_specific_epithet)
+
+stats <- climond_aa %>%
+  select(Species, Site, AA, ClimateVariable, ClimateValue) %>%
+  group_by(Site, ClimateVariable) %>%
+  tidyr::nest(.key = "Data") %>%
+  mutate(Tree = purrr::map(Data, ~ ape::keep.tip(tree, .$Species))) %>%
+  mutate(Groups = purrr::map(Data, ~ select(., "Species", "AA") %>% tibble::deframe())) %>%
+  mutate(ResponseVar = purrr::map(Data, ~ select(., "Species", "ClimateValue") %>% tibble::deframe())) %>% # select + deframe is more readable than setNames
+  rowwise() %>%
+  # head(1) %>% # for testing with a smaller dataframe
+  # mutate(ANOVAP = phytools::phylANOVA(tree = purrr::pluck(Tree),
+  #                                    x = purrr::pluck(Groups), # droplevels will drop the unused levels
+  #                                    y = purrr::pluck(ResponseVar),
+  #                                    posthoc = TRUE,
+  #                                    nsim = 1000,
+  #                                    p.adj = "none")$Pf) %>%  # Pt attribute has the adjusted P values
+  mutate(PostHoc = phytools::phylANOVA(tree = purrr::pluck(Tree),
+                                     x = purrr::pluck(Groups) %>% droplevels(), # droplevels will drop the unused levels
+                                     y = purrr::pluck(ResponseVar),
+                                     posthoc = TRUE,
+                                     nsim = 1000,
+                                     p.adj = "none")$Pt %>%  # Pt attribute has the adjusted P values
+           as_tibble(rownames = "group1") %>%
+           list()) %>% # list puts the tibble into an object of length 1 (to fit into one cell)
+  mutate(PostHoc = tidyr::pivot_longer(PostHoc, cols = !contains("group"), names_to = "group2", values_to = "p.adj") %>%
+           list()) %>%
+  tidyr::unnest(PostHoc) %>%
+  mutate(groups = stringr::str_c(group1, group2, sep = "-"), .before = "p.adj") %>% 
+  select(Site, ClimateVariable, groups, p.adj) %>%
+  group_by(Site, ClimateVariable) %>% 
+  tidyr::nest(.key = "PostHoc") %>%
+  mutate(PostHoc = purrr::map(PostHoc, ~ tibble::deframe(.))) %>% 
+  mutate(Letters = purrr::map(PostHoc, ~ multcompView::multcompLetters(.)$Letters %>%
+           as_tibble(rownames = "AA") %>%
+           rename(Letter = value))) %>%
+  tidyr::unnest(Letters) %>%
+  rowwise() %>%
+  mutate(Signif = any(purrr::pluck(PostHoc) < 0.05)) %>%
+  mutate(Letter = ifelse(Signif, Letter, ""))
+
+readr::write_csv(stats, here::here("analyze", "phy_anova_edwards2017.csv"))
+
+```
+
+## Figures: Climate
+
+Run above first.
+
+```{r}
+
+clim_aa <- bind_rows(bioclim_aa, climond_aa)
+
+stats_edwards <- readr::read_csv(here::here("analyze", "phy_anova_edwards2017.csv")) %>%
+  full_join(climond_aa_summary)
+stats <- readr::read_csv(here::here("analyze", "phy_anova.csv")) %>%
+  full_join(bioclim_aa_summary) %>%
+  bind_rows(stats_edwards) %>%
+  mutate(ClimateValue = ClimateValueMean+ClimateValueSE) %>%
+  full_join(., ancestral_aa, by = "Site") %>%
+  mutate(Ancestral = ifelse(AA == AA_Ancestral, TRUE, FALSE))
+
+sig_sites <- stats %>%
+  filter(Letter != "a") %>%
+  select(Site) %>%
+  unique() %>%
+  pull()
+sig_sites
+
+fig_clim_variables <- stats %>%
+  dplyr::select(ClimateVariable) %>%
+  distinct() %>%
+  mutate(AxisTitle = case_when(
+    ClimateVariable == "MeanTempAnnual_median" ~ "Annual\nmean temp.\n(°C)",
+    ClimateVariable == "TempSeasonality_median" ~ "Temp.\nseasonality\n(100 × SD)",
+    # ClimateVariable == "TempSeasonality_median" ~ "Temp.\nseasonality\n(°C)",
+    ClimateVariable == "MeanTempWarmQuarter_median" ~ "Temp.\nwarmest quarter\n(°C)",
+    ClimateVariable == "MeanTempColdQuarter_median"  ~ "Temp.\ncoldest quarter\n(°C)",
+    ClimateVariable == "PrecipAnnual_median" ~ "Annual\nprecip.\n(mm)",
+    ClimateVariable == "MeanTempColdWeek" ~ "Temp.\ncoldest week\n(°C)",
+    ClimateVariable == "PrecipSeasonality" ~ "Precip.\nseasonality\n(coeff. of variation)"
+  ))
+
+sig_sites <- stats %>%
+  filter(Letter != "a") %>%
+  select(Site) %>%
+  unique() %>%
+  pull()
+sig_sites
+
+plot_clim <- function(df, stats, clim_var, y_axis_title) {
+  fig <- df %>%
+    filter(ClimateVariable == clim_var) %>%
+    ggplot(aes(x = forcats::fct_reorder(AA, Ancestral), y = ClimateValue)) +
+    stat_summary(aes(fill = Ancestral),
+                 fun.data = "mean_se",
+                 color = "black",
+                 shape = 21,
+                 stroke = 0.25) +
+    # geom_text(aes(label = p.adj.signif),
+    #           data = filter(pairwise_tests, ClimateVariable == clim_var)) +
+    geom_text(aes(label = Letter),
+              data = filter(stats, ClimateVariable == clim_var),
+              vjust = -0.65) +
+    scale_fill_manual(values = c("brown2", "grey")) +
+    labs(x = "", y = y_axis_title) +
+    scale_y_continuous(expand = expansion(mult = c(0.1, 0.3))) +
+    cowplot::theme_cowplot() +
+    cowplot::panel_border(color = "black") +
+    theme(axis.line = element_blank(),
+          panel.grid = element_blank(),
+          panel.spacing = unit(5, "pt"),
+          legend.position = "none",
+          strip.text.x = element_text(hjust = 1),
+          strip.background = element_blank()) +
+    facet_grid(~ Site, scales = "free", space = "free")
+  return(fig)
+}
+
+fig_clim_list_all <- purrr::pmap(fig_clim_variables, ~ plot_clim(clim_aa, stats, .x, .y))
+fig_clim_list <- purrr::pmap(fig_clim_variables, ~ plot_clim(filter(clim_aa, Site %in% sig_sites), filter(stats, Site %in% sig_sites), .x, .y))
+
+fig_clim <- cowplot::plot_grid(fig_clim_list[[1]], NULL, fig_clim_list[[3]], NULL, fig_clim_list[[5]], NULL, fig_clim_list[[6]], NULL, fig_clim_list[[7]],
+                           ncol = 1,
+                           align = "hv",
+                           axis = "lr",
+                           rel_heights = c(1, -0.1, 1, -0.1, 1, -0.1, 1,-0.1, 1),
+                           labels = c("b", "", "c", "", "d", "", "e", "", "f"),
+                           label_x = -0.03)
+fig_clim_all <- cowplot::plot_grid(fig_clim_list_all[[1]], NULL, fig_clim_list_all[[3]], NULL, fig_clim_list_all[[5]], NULL, fig_clim_list_all[[6]], NULL, fig_clim_list_all[[7]],
+                           ncol = 1,
+                           align = "hv",
+                           axis = "lr",
+                           rel_heights = c(1, -0.1, 1, -0.1, 1, -0.1, 1,-0.1, 1),
+                           labels = c("a", "", "b", "", "c", "", "d", "", "e"),
+                           label_x = -0.03)
+
+ggsave(here::here("analyze", "plots", "fig_s3.svg"), plot = fig_clim_all, width = 11, height = 8.5, units = "in") # for showing all data
+
+
+```
+
+<!-- # Climate PCAs and PC1 analysis -->
+
+<!-- ```{r} -->
+
+<!-- # GET PC1 VALUES -->
+
+<!-- library(phytools) -->
+<!-- library(ggfortify) -->
+
+<!-- full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>% -->
+<!--   rename(Species = species) %>% -->
+<!--   dplyr::select(Species) %>% -->
+<!--   mutate(ShortName = stringr::str_sub(Species, 1, 10), .before = "Species") -->
+<!-- tree <- read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>% -->
+<!--   treeio::rename_taxa(full_specific_epithet) -->
+
+<!-- climond <- readr::read_csv(here::here("edwards_climate", "120_taxa_data.csv")) %>% -->
+<!--   select(species, bio06, bio15) %>% -->
+<!--   rename(Species = species, -->
+<!--          MeanTempColdWeek = bio06, -->
+<!--          PrecipSeasonality = bio15) -->
+
+<!-- bioclim_summary <- readr::read_csv(here::here("analyze", "bioclim_summary.csv")) %>% -->
+<!--   mutate(Species = stringr::word(Species, 2)) %>% -->
+<!--   select(Species, ends_with("_median") & !starts_with("Precip")) %>% -->
+<!--   full_join(climond) %>% -->
+<!--   tibble::column_to_rownames("Species") %>% -->
+<!--   rename( -->
+<!--     "Annual Mean Temp." = MeanTempAnnual_median, -->
+<!--     # "Temp. Coldest Quarter" = MeanTempColdQuarter_median, -->
+<!--     "Temp. Warmest Quarter" = MeanTempWarmQuarter_median, -->
+<!--     "Temp. Seasonality" = TempSeasonality_median, -->
+<!--     "Temp. Coldest Week" = MeanTempColdWeek, -->
+<!--   ) %>% -->
+<!--   select(!c(MeanTempColdQuarter_median, PrecipSeasonality)) %>% -->
+<!--   na.omit() -->
+
+<!-- # PHYLOGENETIC PCA -->
+<!-- #   -->
+<!-- # PCA <- phytools::phyl.pca(tree = tree, -->
+<!-- #                           Y = bioclim_summary, -->
+<!-- #                           mode = "cor") %>% -->
+<!-- #   phytools::as.princomp() -->
+<!-- #  -->
+<!-- # PCA$loadings[,"Comp.1"] # check what variable is drives most of the variation -->
+<!-- #  -->
+<!-- # plot_pca <- autoplot(PCA, -->
+<!-- #                      data = bioclim_summary, -->
+<!-- #                      alpha = 0.5, -->
+<!-- #                      loadings.color = "black", -->
+<!-- #                      loadings.label = TRUE, -->
+<!-- #                      loadings.label.repel = TRUE, -->
+<!-- #                      loadings.label.size = 3, -->
+<!-- #                      loadings.label.color = "black", -->
+<!-- #                      loadings.label.fontface = "bold", -->
+<!-- #                      size = 2.5) + -->
+<!-- #   scale_x_continuous(sec.axis = dup_axis()) + -->
+<!-- #   scale_y_continuous(sec.axis = dup_axis()) + -->
+<!-- #   # scale_x_continuous(sec.axis = dup_axis(), limits = c(-0.5, 0.6)) + -->
+<!-- #   # scale_y_continuous(sec.axis = dup_axis(), limits = c(-0.75, 0.5)) + -->
+<!-- #   scale_fill_manual(values = c("white", "royalblue2", "brown2")) + -->
+<!-- #   cowplot::theme_cowplot(line_size = 0.25, font_size = 10) + -->
+<!-- #   theme(axis.ticks.length = unit(-2.75, "pt"), -->
+<!-- #         axis.text.x.top = element_blank(), -->
+<!-- #         axis.text.y.right = element_blank(), -->
+<!-- #         axis.title.x.top = element_blank(), -->
+<!-- #         axis.title.y.right = element_blank()) + -->
+<!-- #   theme(legend.position = "none") -->
+<!-- #  -->
+<!-- # # cowplot::save_plot(here::here("analyze", "plots", "fig_s7_phylo.svg"), plot = plot_pca) -->
+<!-- #  -->
+<!-- # climate_pc1 <- PCA$scores[,"Comp.1"] %>% -->
+<!-- #   as_tibble(rownames = "Species") %>% -->
+<!-- #   rename(TemperaturePC1 = value) -->
+<!-- #  -->
+<!-- # aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>% -->
+<!-- #   full_join(full_specific_epithet) %>% -->
+<!-- #   filter(AA != "-") -->
+<!-- # ancestral_aa <- aa %>% -->
+<!-- #   ungroup() %>% -->
+<!-- #   select(Site, AA_Ancestral) %>% -->
+<!-- #   unique() -->
+<!-- #  -->
+<!-- # pc1_aa <- full_join(climate_pc1, aa) -->
+<!-- #  -->
+<!-- # pairwise_tests <- pc1_aa %>% -->
+<!-- #   group_by(Site) %>% -->
+<!-- #   rstatix::t_test(formula = TemperaturePC1 ~ AA, p.adjust.method =  "bonferroni", ref.group = "all") %>% -->
+<!-- #   rstatix::add_significance(cutpoints = c(0, 0.001, 0.01, 0.05, 1), -->
+<!-- #                             symbols = c("***", "**", "*", "")) %>% -->
+<!-- #   rstatix::add_xy_position(fun = "mean_se", x = "AA", scales = "free", step.increase = 0) %>% -->
+<!-- #   full_join(ancestral_aa, by = "Site") %>% -->
+<!-- #   mutate(AA = group1, -->
+<!-- #          Ancestral = ifelse(AA == AA_Ancestral, TRUE, FALSE), -->
+<!-- #          TemperaturePC1 = y.position) -->
+<!-- # knitr::kable(pairwise_tests) -->
+<!-- #  -->
+<!-- # pairwise_tests %>% filter(p.adj < 0.05) -->
+
+<!-- # NONPHYLOGENETIC PCA with PHYLOGENETIC ANOVA -->
+
+<!-- PCA <- princomp(bioclim_summary, cor = TRUE) -->
+
+<!-- PCA$loadings[,"Comp.1"] -->
+
+<!-- plot_pca <- autoplot(PCA, -->
+<!--                      data = bioclim_summary, -->
+<!--                      alpha = 0.5, -->
+<!--                      loadings.color = "black", -->
+<!--                      loadings.label = TRUE, -->
+<!--                      loadings.label.repel = TRUE, -->
+<!--                      loadings.label.size = 3, -->
+<!--                      loadings.label.color = "black", -->
+<!--                      loadings.label.fontface = "bold", -->
+<!--                      size = 2.5) + -->
+<!--   scale_x_continuous(sec.axis = dup_axis()) + -->
+<!--   scale_y_continuous(sec.axis = dup_axis()) + -->
+<!--   # scale_x_continuous(sec.axis = dup_axis(), limits = c(-0.5, 0.6)) + -->
+<!--   # scale_y_continuous(sec.axis = dup_axis(), limits = c(-0.75, 0.5)) + -->
+<!--   scale_fill_manual(values = c("white", "royalblue2", "brown2")) + -->
+<!--   cowplot::theme_cowplot(line_size = 0.25, font_size = 10) + -->
+<!--   theme(axis.ticks.length = unit(-2.75, "pt"), -->
+<!--         axis.text.x.top = element_blank(), -->
+<!--         axis.text.y.right = element_blank(), -->
+<!--         axis.title.x.top = element_blank(), -->
+<!--         axis.title.y.right = element_blank()) + -->
+<!--   theme(legend.position = "none") -->
+
+<!-- cowplot::save_plot(here::here("analyze", "plots", "fig_s7.svg"), plot = plot_pca) -->
+
+<!-- climate_pc1 <- PCA$scores[,"Comp.1"] %>% -->
+<!--   as_tibble(rownames = "Species") %>% -->
+<!--   rename(TemperaturePC1 = value) -->
+
+<!-- aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>%  -->
+<!--   full_join(full_specific_epithet) %>% -->
+<!--   filter(AA != "-") -->
+<!-- ancestral_aa <- aa %>% -->
+<!--   ungroup() %>% -->
+<!--   select(Site, AA_Ancestral) %>% -->
+<!--   unique() -->
+
+<!-- pc1_aa <- full_join(climate_pc1, aa) %>%  -->
+<!--   filter(!is.na(TemperaturePC1)) -->
+
+<!-- stats <- pc1_aa %>% -->
+<!--   select(Species, Site, AA, TemperaturePC1) %>% -->
+<!--   group_by(Site) %>% -->
+<!--   tidyr::nest(.key = "Data") %>% -->
+<!--   mutate(Tree = purrr::map(Data, ~ ape::keep.tip(tree, .$Species))) %>% -->
+<!--   mutate(Groups = purrr::map(Data, ~ select(., "Species", "AA") %>% tibble::deframe())) %>% -->
+<!--   mutate(ResponseVar = purrr::map(Data, ~ select(., "Species", "TemperaturePC1") %>% tibble::deframe())) %>% # select + deframe is more readable than setNames -->
+<!--   rowwise() %>% -->
+<!--   # head(1) %>% # for testing with a smaller dataframe -->
+<!--   # mutate(ANOVAP = phytools::phylANOVA(tree = purrr::pluck(Tree), -->
+<!--   #                                    x = purrr::pluck(Groups), # droplevels will drop the unused levels -->
+<!--   #                                    y = purrr::pluck(ResponseVar), -->
+<!--   #                                    posthoc = TRUE, -->
+<!--   #                                    nsim = 1000, -->
+<!--   #                                    p.adj = "none")$Pf) %>%  # Pt attribute has the adjusted P values -->
+<!--   mutate(PostHoc = phytools::phylANOVA(tree = purrr::pluck(Tree), -->
+<!--                                      x = purrr::pluck(Groups), # droplevels will drop the unused levels -->
+<!--                                      y = purrr::pluck(ResponseVar), -->
+<!--                                      posthoc = TRUE, -->
+<!--                                      nsim = 1000, -->
+<!--                                      p.adj = "none")$Pt %>%  # Pt attribute has the adjusted P values -->
+<!--            as_tibble(rownames = "group1") %>% -->
+<!--            list()) %>% # list puts the tibble into an object of length 1 (to fit into one cell) -->
+<!--   mutate(PostHoc = tidyr::pivot_longer(PostHoc, cols = !contains("group"), names_to = "group2", values_to = "p.adj") %>% -->
+<!--            list()) %>% -->
+<!--   tidyr::unnest(PostHoc) %>% -->
+<!--   mutate(groups = stringr::str_c(group1, group2, sep = "-"), .before = "p.adj") %>%  -->
+<!--   select(Site, ANOVAP, groups, p.adj) %>% -->
+<!--   group_by(Site, ANOVAP) %>% -->
+<!--   tidyr::nest(.key = "PostHoc") %>% -->
+<!--   mutate(PostHoc = purrr::map(PostHoc, ~ tibble::deframe(.))) %>% -->
+<!--   mutate(Letters = purrr::map(PostHoc, ~ multcompView::multcompLetters(.)$Letters %>% -->
+<!--                                 as_tibble(rownames = "AA") %>% -->
+<!--                                 rename(Letter = value))) %>% -->
+<!--   tidyr::unnest(Letters) %>% -->
+<!--   rowwise() %>% -->
+<!--   mutate(Signif = any(purrr::pluck(PostHoc) < 0.05)) %>% -->
+<!--   mutate(Letter = ifelse(Signif, Letter, "")) -->
+
+
+<!-- readr::write_csv(stats, here::here("analyze", "phy_anova_pc1.csv")) -->
+
+<!-- # FIG -->
+
+<!-- stats <- readr::read_csv(here::here("analyze", "phy_anova_pc1.csv")) %>% -->
+<!--   full_join(pc1_aa) %>% -->
+<!--   group_by(Site, AA) %>% -->
+<!--   mutate(across(.cols = TemperaturePC1, -->
+<!--                    .f = list(Mean = mean, -->
+<!--                              SE = ~ sd(.)/sqrt(n())), -->
+<!--                    .names = '{.col}{.fn}')) %>% -->
+<!--   mutate(TemperaturePC1 = TemperaturePC1Mean + TemperaturePC1SE) -->
+
+<!-- sig_sites <- stats %>% -->
+<!--   filter(Letter != "a") %>% -->
+<!--   select(Site) %>% -->
+<!--   unique() %>% -->
+<!--   pull() -->
+<!-- sig_sites -->
+
+<!-- pc1_aa_plot <- pc1_aa %>% -->
+<!--   filter(Site %in% sig_sites) %>% -->
+<!--   ggplot(aes(x = forcats::fct_reorder(AA, Ancestral), y = TemperaturePC1)) + -->
+<!--   stat_summary(aes(fill = Ancestral), -->
+<!--                fun.data = "mean_se", -->
+<!--                color = "black", -->
+<!--                shape = 21, -->
+<!--                stroke = 0.25) + -->
+<!--   geom_text(aes(label = Letter), -->
+<!--             data = filter(stats, Site %in% sig_sites), -->
+<!--             vjust = -0.5) + -->
+<!--   scale_fill_manual(values = c("brown2", "grey")) + -->
+<!--   labs(x = "", y = "Temperature PC1") + -->
+<!--   scale_y_continuous(expand = expansion(mult = c(0.15, 0.2))) + -->
+<!--   cowplot::theme_cowplot() + -->
+<!--   cowplot::panel_border(color = "black") + -->
+<!--   theme(axis.line = element_blank(), -->
+<!--         panel.grid = element_blank(), -->
+<!--         panel.spacing = unit(5, "pt"), -->
+<!--         legend.position = "none", -->
+<!--         strip.text.x = element_text(hjust = 1), -->
+<!--         strip.background = element_blank()) + -->
+<!--   facet_grid(~ Site, scales = "free", space = "free") -->
+<!-- pc1_aa_plot -->
+
+<!-- ggsave(here::here("analyze", "plots", "fig_s8.svg"), plot = pc1_aa_plot, width = 2, height = 2) -->
+<!-- ``` -->
+
+
+# Draw phylogenetic tree figures
+
+## Tree with lines connecting clades with sites under convergent evolution. 
+
+Only clades with more than one species were highlighted for simplicity.
+
+```{r tree}
+
+library(ggtree)
+clade_nodes <- readr::read_csv(here::here("csubst", "analysis", "landis_clades.csv")) %>% distinct(Clade, Node)
+clade_nodes
+convergent_clades <- readr::read_csv(here::here("csubst", "analysis", "convergent_clades.csv"))
+convergent_clades
+full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>%
+  dplyr::select(species) %>%
+  mutate(ShortName = stringr::str_sub(species, 1, 10), .before = "species")
+full_specific_epithet
+tree_file <- read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>%
+  treeio::rename_taxa(full_specific_epithet)
+
+CLADE_LABEL_OFFSET <- 15
+tree <- ggtree(tree_file) +
+  geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) +
+  geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_taxalink(taxa1 = 174, taxa2 = 187, linetype = "dotdash", curvature = 0.1, color = "brown2") +
+  geom_taxalink(taxa1 = 204, taxa2 = 267, linetype = "dotdash", curvature = 0.25, color = "brown2") +
+  geom_taxalink(taxa1 = 224, taxa2 = 195, linetype = "dotdash", curvature = -0.35, color = "brown2") +
+  geom_taxalink(taxa1 = 233, taxa2 = 195, linetype = "dotdash", curvature = -0.25, color = "brown2") +
+  geom_taxalink(taxa1 = 264, taxa2 = 249, linetype = "dotdash", curvature = -0.25, color = "brown2") +
+  geom_taxalink(taxa1 = 276, taxa2 = 233, linetype = "dotdash", curvature = -0.5, color = "brown2") +
+  geom_taxalink(taxa1 = 276, taxa2 = 290, linetype = "dotdash", curvature = 0.25, color = "brown2") +
+  geom_taxalink(taxa1 = 284, taxa2 = 295, linetype = "dotdash", curvature = 0.20, color = "brown2") +
+  geom_taxalink(taxa1 = 289, taxa2 = 194, linetype = "dotdash", curvature = -0.20, color = "brown2") +
+  geom_taxalink(taxa1 = 290, taxa2 = 223, linetype = "dotdash", curvature = -0.25, color = "brown2") +
+  geom_taxalink(taxa1 = 290, taxa2 = 246, linetype = "dotdash", curvature = 0, color = "brown2") +
+  theme(legend.position = "none") +
+  hexpand(0.15, direction = 1) +
+  xlim_tree(c(-0.0025, 0.035)) +
+  coord_cartesian(clip="off")
+# ggsave(here::here("analyze", "plots", "fig_1a.svg"), plot = tree, width = 8.5, height = 11)
+
+```
+
+<!-- ## Individual trees with AA subs -->
+
+<!-- ```{r} -->
+
+<!-- library(ggtree) -->
+
+<!-- full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>% -->
+<!--   dplyr::select(species) %>% -->
+<!--   mutate(ShortName = stringr::str_sub(species, 1, 10), .before = "species") -->
+<!-- tree_file <- read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>% -->
+<!--   treeio::rename_taxa(full_specific_epithet) -->
+
+<!-- paml_aa_anc <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>% -->
+<!--   rename(PAML_AA_Ancestral = AA_Ancestral) %>% -->
+<!--   select(Site, PAML_AA_Ancestral) %>% -->
+<!--   distinct() -->
+
+<!-- sites <- readr::read_csv(here::here("csubst", "analysis", "convergent_clades.csv")) %>% -->
+<!--   rename(Site = codon_site_alignment) %>% -->
+<!--   inner_join(paml_aa_anc) %>% -->
+<!--   arrange(Site) %>% -->
+<!--   mutate(substitution1 = stringr::str_c(aa_1_anc, Site, aa_1), -->
+<!--          substitution2 = stringr::str_c(aa_2_anc, Site, aa_2)) %>% -->
+<!--   select(Site, node1, substitution1, node2, substitution2, PAML_AA_Ancestral) -->
+<!-- sites -->
+
+<!-- CLADE_LABEL_OFFSET <- 15 -->
+
+<!-- # NONCONVERGENT CLADES - get ancestral reconstructed codons from paml -->
+
+<!-- # 157 -->
+<!-- # -->
+<!-- # node <- ape::getMRCA(tree_file, c("integrifolium", "brevipes")) -->
+<!-- # tree <- ggtree(tree_file) + -->
+<!-- #   ggtitle("Site 157 - Ancestral AA at root of Viburnum is V") + -->
+<!-- #   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!-- #   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!-- #   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!-- #   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!-- #   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!-- #   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!-- #   geom_nodelab(aes(subset = node == node, -->
+<!-- #                   x = x - branch.length * 0.5, -->
+<!-- #                   label = "V157S"), -->
+<!-- #               hjust = 0.5, -->
+<!-- #               nudge_y = 0.5, -->
+<!-- #               size = 1.75, -->
+<!-- #               color = 'red') + -->
+<!-- #   theme(legend.position = "none") + -->
+<!-- #   hexpand(0.15, direction = 1) + -->
+<!-- #   coord_cartesian(clip = "off") -->
+<!-- # ggsave(here::here("analyze", "plots", "subs_trees", "157.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # other positions were uncertain due to missing data -->
+
+<!-- # CONVERGENT CLADES - get ancestral reconstruction from csubst -->
+
+<!-- # 76 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 76 - Ancestral AA at root of Viburnum is S") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 174, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "N76S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "obtusatum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "N76S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "76.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 95 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 95 - Ancestral AA at root of Viburnum is S") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 223, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "T95S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "acerifolium", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "T95S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "95.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 219 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 219 - Ancestral AA at root of Viburnum is L") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 223, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "L219V"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 290, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "L219V"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "clemensiae", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "L219V"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "219.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 225 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 225 - Ancestral AA at root of Viburnum is I") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 204, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "L225I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_nodelab(aes(subset = node == 267, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "L225I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_nodelab(aes(subset = node == 289, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "I225L"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 194, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "I225L"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "I225L"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "225.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 226 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 226 - Ancestral AA at root of Viburnum is Y") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 195, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "Y226F"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 233, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "Y226F"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "Y226F"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "226.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 249 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 249 - Ancestral AA at root of Viburnum is E") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 195, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "D249E"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "D249E"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   geom_nodelab(aes(subset = node == 224, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "D249E"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "249.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 251 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 251 - Ancestral AA at root of Viburnum is M") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 245, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "M251I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 258, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "M251I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "nervosum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "M251I"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "trilobum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "M251I"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 249, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "I251M"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_nodelab(aes(subset = node == 264, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "I251M"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "251.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 255 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 255 - Ancestral AA at root of Viburnum is V") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 290, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "V255I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "lantanoides", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "V255I"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "V255I"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "255.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 262 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 262 - Ancestral AA at root of Viburnum is V") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 195, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "V262A"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "lantanoides", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "V262A"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "V262A"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "262.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 279 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 279 - Ancestral AA at root of Viburnum is T") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 264, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "S279T"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "subalpinum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "S279T"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   geom_nodelab(aes(subset = node == 258, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "T279S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "trilobum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "T279S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "clemensiae", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "T279S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "lantanoides", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "T279S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "nervosum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "T279S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "279.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 309 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 309 - Ancestral AA at root of Viburnum is M") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 232, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "M309I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 258, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "M309I"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "nervosum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "M309I"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "309.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 317 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 317 - Ancestral AA at root of Viburnum is A") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 195, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "A317G"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 290, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "A317G"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "orientale", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "A317G"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "317.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 328 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 328 - Ancestral AA at root of Viburnum is A") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 258, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "A328S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 264, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "A328S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "nervosum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "A328S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   geom_tiplab(aes(subset = label == "subalpinum", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "A328S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "328.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 340 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 340 - Ancestral AA at root of Viburnum is E") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 187, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "E340D"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 228, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "E340D"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 223, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "D340E"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "acerifolium", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "D340E"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "340.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 449 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 449 - Ancestral AA at root of Viburnum is C") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 224, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "A449S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'purple') + -->
+<!--   geom_tiplab(aes(subset = label == "acerifolium", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "A449S"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'purple') + -->
+<!--   geom_nodelab(aes(subset = node == 246, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "C449S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 284, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "C449S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   geom_nodelab(aes(subset = node == 295, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "C449S"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'blue') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "449.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- # 475 -->
+
+<!-- tree <- ggtree(tree_file) + -->
+<!--   ggtitle("Site 475 - Ancestral AA at root of Viburnum is L") + -->
+<!--   geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) + -->
+<!--   geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) + -->
+<!--   geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) + -->
+<!--   geom_nodelab(aes(subset = node == 232, -->
+<!--                    x = x - branch.length * 0.5, -->
+<!--                    label = "I475L"), -->
+<!--                hjust = 0.5, -->
+<!--                nudge_y = 0.5, -->
+<!--                size = 1.75, -->
+<!--                color = 'red') + -->
+<!--   geom_tiplab(aes(subset = label == "acerifolium", -->
+<!--                   x = x - branch.length * 0.5, -->
+<!--                   label = "I475L"), -->
+<!--               hjust = 0.5, -->
+<!--               nudge_y = 0.5, -->
+<!--               size = 1.75, -->
+<!--               color = 'red') + -->
+<!--   theme(legend.position = "none") + -->
+<!--   hexpand(0.15, direction = 1) + -->
+<!--   coord_cartesian(clip = "off") -->
+<!-- ggsave(here::here("analyze", "plots", "subs_trees", "475.svg"), plot = tree, width = 8.5, height = 12) -->
+
+<!-- ``` -->
+
+# Figure 1: Tree with convergent AA subs
+
+```{r}
+
+library(ggtree)
+
+full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>%
+  dplyr::select(species) %>%
+  mutate(ShortName = stringr::str_sub(species, 1, 10), .before = "species")
+tree_file <- ape::read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>%
+  treeio::rename_taxa(full_specific_epithet)
+landis_biomes <- readr::read_csv(here::here("landis_biome_range", "landis_biomes.csv")) %>%
+  mutate(Species = stringr::str_replace(Species, "_", "-")) %>%
+  mutate(Species = stringr::str_replace(Species, "rigidum", "rugosum"))
+
+CLADE_LABEL_OFFSET <- 12.5
+
+tree <- ggtree(tree_file) %<+% landis_biomes +
+  geom_tiplab(hjust = -0.025, size = 2.25, fontface = "italic", align = TRUE, offset = 0.0015) +
+  geom_tippoint(aes(color = Biome)) +
+  geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 223, label = "Sambucina", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_nodelab(aes(subset = node == 154,
+                   x = x - branch.length * 0.5,
+                   label = "I475L"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 174,
+                   x = x - branch.length * 0.5,
+                   label = "N76S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 187,
+                   x = x - branch.length * 0.5,
+                   label = "E340D"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 194,
+                   x = x - branch.length * 0.5,
+                   label = "I225L"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 195,
+                   x = x - branch.length * 0.5,
+                   label = "Y226F / D249E / V252A / A317G"),
+               hjust = 0.5, nudge_x = -2.65, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 204,
+                   x = x - branch.length * 0.5,
+                   label = "L225I"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 223,
+                   x = x - branch.length * 0.5,
+                   label = "T95S / L219V / D340E"),
+               hjust = 0.5, nudge_x = -0.15, nudge_y = 0.4, size = 1.3) +
+  geom_nodelab(aes(subset = node == 224,
+                   x = x - branch.length * 0.5,
+                   label = "D249E / A449S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 228,
+                   x = x - branch.length * 0.5,
+                   label = "E340D"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 232,
+                   x = x - branch.length * 0.5,
+                   label = "M309I"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 233,
+                   x = x - branch.length * 0.5,
+                   label = "Y226F"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 245,
+                   x = x - branch.length * 0.5,
+                   label = "M251I"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 246,
+                   x = x - branch.length * 0.5,
+                   label = "C449S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 249,
+                   x = x - branch.length * 0.5,
+                   label = "I251M / S279T"),
+               hjust = 0.5, nudge_x = -0.75, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 258,
+                   x = x - branch.length * 0.5,
+                   label = "M251I / T279S /"),
+               hjust = 0.5, nudge_x = -0.35, nudge_y = 0.9, size = 1.3) +
+  geom_nodelab(aes(subset = node == 258,
+                   x = x - branch.length * 0.5,
+                   label = "M309I / A328S"),
+               hjust = 0.5, nudge_x = -0.35, nudge_y = 0.4, size = 1.3) +
+  geom_nodelab(aes(subset = node == 264,
+                   x = x - branch.length * 0.5,
+                   label = "I251M / S279T / A328S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 267,
+                   x = x - branch.length * 0.5,
+                   label = "L225I"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 284,
+                   x = x - branch.length * 0.5,
+                   label = "C449S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 289,
+                   x = x - branch.length * 0.5,
+                   label = "I225L"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 290,
+                   x = x - branch.length * 0.5,
+                   label = "L219V / V255I / A317G"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_nodelab(aes(subset = node == 295,
+                   x = x - branch.length * 0.5,
+                   label = "C449S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "acerifolium",
+                  x = x - branch.length * 0.5,
+                  label = "T95S / D340E / A449S / I475L"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.3) +
+  geom_tiplab(aes(subset = label == "clemensiae",
+                  x = x - branch.length * 0.5,
+                  label = "L219V / T279S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "lantanoides",
+                  x = x - branch.length * 0.5,
+                  label = "V255I / V262A / T279S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "nervosum",
+                  x = x - branch.length * 0.5,
+                  label = "M251I / T279S / M309I / A328S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "obtusatum",
+                  x = x - branch.length * 0.5,
+                  label = "N76S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "orientale",
+                  x = x - branch.length * 0.5,
+                  label = "I225L / Y226F / D249E / V255I / V262A / A317G"),
+               hjust = 0.5, nudge_x = -5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "subalpinum",
+                  x = x - branch.length * 0.5,
+                  label = "S279T / A328S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  geom_tiplab(aes(subset = label == "trilobum",
+                  x = x - branch.length * 0.5,
+                  label = "M251I / T279S"),
+               hjust = 0.5, nudge_y = 0.4, size = 1.75) +
+  labs(color = "Biome") +
+  scale_color_manual(values = c("darkturquoise", "forestgreen", "blue", "red")) +
+  hexpand(0.15, direction = 1) +
+  coord_cartesian(clip = "off") +
+  theme(legend.position = "bottom")
+ggsave(here::here("analyze", "plots", "fig_1.svg"), plot = tree, width = 8.5, height = 11, scale = 1.25)
+
+```
+
+
+# Figure: Pymol analyses
+
+## Hydrogen bonds?
+
+```{r h_bonds}
+
+# Define residues that can form H-bonds, and also categorize amino acid types
+H_BONDABLE <- c("S", # OH (hydroxyl)
+                "T", # OH
+                "Y", # OH
+                "N", # CONH2 (amide)
+                "Q", # CONH2
+                "C", # SH (thiol) - not really, but can participate in dipole interactions with other thiols
+                "H", # imidazole ring
+                "D", # -COO- (carboxylate)
+                "E", # -COO-
+                "R", # guanidine
+                "K") # -NH2 (amine)
+ALIPHATIC <- c("A", "G", "I", "L", "P", "V")
+AROMATIC <- c("F", "W", "Y")
+ACIDIC <- c("D", "E")
+BASIC <- c("R", "H", "K")
+HYDROXYLIC <- c("S", "T")
+SULFUR_CONTAINING <- c("C", "M")
+AMIDIC <- c("N", "Q")
+SITES_OF_INTEREST <- readr::read_csv(here::here("analyze", "pos_selected_conv_sites.csv")) %>%
+  pull(Site) %>%
+  unique()
+
+# See which residues go from non-H-bondable to H-bondable
+h_bonds <- aa %>%
+  filter(Site %in% SITES_OF_INTEREST, AA != "-") %>%
+  ungroup() %>%
+  select(Site, AA, AA_Ancestral) %>%
+  unique() %>%
+  filter(AA != AA_Ancestral) %>%
+  mutate(AA_HBondable = ifelse(AA %in% H_BONDABLE, TRUE, FALSE),
+         AA_A_HBondable = ifelse(AA_Ancestral %in% H_BONDABLE, TRUE, FALSE)) %>%
+  rowwise() %>%
+  mutate(across(c(AA, AA_Ancestral),
+                .fns = ~ case_when(. %in% ALIPHATIC ~ "aliphatic",
+                                   . %in% AROMATIC ~ "aromatic",
+                                   . %in% ACIDIC ~ "acidic",
+                                   . %in% BASIC ~ "basic",
+                                   . %in% HYDROXYLIC ~ "hydroxylic",
+                                   . %in% SULFUR_CONTAINING ~ "sulfur_containing",
+                                   . %in% AMIDIC ~ "amidic"),
+                .names = "{.col}_Type")) %>%
+  mutate(Significant = ifelse(Site %in% NONSIG_SITES, FALSE, TRUE)) %>%
+  arrange(desc(Significant), AA_A_HBondable, AA_HBondable)
+
+h_bonds
+
+```
+
+## Figure: Plot Pymol structure
+
+residue 219 is close to an adjacent small subunit (green) but not within hydrogen bond distance
+
+```{r pymol_fig}
+
+pymol_main <- magick::image_read(here::here("structure", "macrostructure.png")) %>%
+  magick::image_trim() %>%
+  grid::rasterGrob()
+
+IMAGE_BORDER <- "15x15"
+inset1 <- magick::image_read(here::here("structure", "c219.png")) %>%
+  magick::image_border("black", IMAGE_BORDER) %>%
+  grid::rasterGrob()
+inset2 <- magick::image_read(here::here("structure", "t262.png")) %>%
+  magick::image_border("black", IMAGE_BORDER) %>%
+  grid::rasterGrob()
+inset3 <- magick::image_read(here::here("structure", "s328.png")) %>%
+  magick::image_border("black", IMAGE_BORDER) %>%
+  grid::rasterGrob()
+pymol_insets <- cowplot::plot_grid(inset1, NULL, inset2, NULL, inset3,
+                                 ncol = 1,
+                                 rel_heights = c(1, 0.15, 1, 0.15, 1),
+                                 rel_widths = c(1, 1, 1, 1, 1),
+                                 labels = c("h", "", "i", "", "j"),
+                                 label_x = -0.1)
+pymol_main <- cowplot::plot_grid(NULL, pymol_main, NULL,
+                                 ncol = 1,
+                                 rel_heights = c(2.5, 8, 2.5),
+                                 labels = c("", "g", ""))
+
+pymol_fig <- cowplot::plot_grid(pymol_main, NULL, pymol_insets,
+                                nrow = 1,
+                                rel_widths = c(3.2, 0.2, 2),
+                                labels = NULL)
+
+# cowplot::save_plot(here::here("analyze", "plots", "fig_2.png"), base_height = 5, base_asp = 1.04, plot = pymol_fig, dpi = 1000)
+
+```
+
+
+# Figure 2: omega, climate, structure
+
+``` {r}
+
+fig_clim_omega <- cowplot::plot_grid(fig_omega, fig_clim,
+                                 ncol = 1,
+                                 align = "h",
+                                 rel_heights = c(1.25, 4),
+                                 labels = c("a", ""),
+                                 label_x = -0.03)
+
+fig2 <- cowplot::plot_grid(fig_clim_omega, pymol_fig,
+                           nrow = 1,
+                           rel_widths = c(1, 2),
+                           labels = NULL,
+                           label_x = -0.03,
+                           scale = 0.95)
+
+ggsave(here::here("analyze", "plots", "fig_2.pdf"), fig2, height = 8.5, width = 9, scale = 1.5, dpi = 1000)
+ggsave(here::here("analyze", "plots", "fig_2.png"), fig2, height = 8.5, width = 9, scale = 1.5, dpi = 1000)
+
+```
+
+# Map figure 
+GBIF occurrences of *Viburnum* species plotted on a world map for a subset of positively selected sites under convergent evolution. Points and the surrounding convex hull were colored according to whether they are identical to the ancestral state (grey, estimated by PAML) or modified (red or blue). The shape of the points represent different lineages.
+
+```{r map}
+
+SITES <- c(219, 262, 328) # because differential climate + pos sel and conv evolution + aliphatic to polar
+gbif_data <- readr::read_csv(here::here("download_gbif", "gbif_data", "clean.csv")) %>%
+  mutate(ShortName = stringr::str_sub(stringr::word(species, 2), 1, 10))
+aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>%
+  filter(Site %in% SITES)
+gbif_aa <- full_join(gbif_data, aa, by = "ShortName")
+world_coords <- map_data("world")# World map data
+
+#plot 
+SITE = 219
+site_data <- gbif_aa %>%
+  filter(Site == SITE & stringr::str_detect(AA, stringr::regex("[:alpha:]")))
+
+map1 <- ggplot() +
+  geom_map(
+    data = world_coords, map = world_coords,
+    aes(map_id = region)
+  ) +
+  geom_point(
+    data = site_data,
+    aes(x = decimalLongitude, y = decimalLatitude, fill = AA, shape = AA)
+  ) +
+  xlim(-180, 180) +
+  ylim(-90, 90) +
+  scale_shape_manual("Amino acid", values = c(22, 21, 23)) +
+  scale_fill_manual("Amino acid", values = c("brown2", "white", "royalblue2")) +
+  labs(title = "L219V/C", fill = "", shape = "") +
+  cowplot::theme_map() +
+  theme(legend.position = "bottom") +
+  coord_fixed()
+
+#plot2
+SITE = 262
+site_data <- gbif_aa %>%
+  filter(Site == SITE & stringr::str_detect(AA, stringr::regex("[:alpha:]")))
+
+map2 <- ggplot() +
+  geom_map(
+    data = world_coords, map = world_coords,
+    aes(map_id = region)
+  ) +
+  geom_point(
+    data = site_data,
+    aes(x = decimalLongitude, y = decimalLatitude, fill = AA, shape = AA)
+  ) +
+  xlim(-180, 180) +
+  ylim(-90, 90) +
+  scale_shape_manual("Amino acid", values = c(21, 22, 23)) +
+  scale_fill_manual("Amino acid", values = c("royalblue2", "brown2", "white")) +
+  labs(title = "V262A/T", fill = "", shape = "") +
+  cowplot::theme_map() +
+  theme(legend.position = "bottom") +
+  coord_fixed()
+
+#plot3
+SITE = 328
+site_data <- gbif_aa %>%
+  filter(Site == SITE & stringr::str_detect(AA, stringr::regex("[:alpha:]")))
+
+map3 <- ggplot() +
+  geom_map(
+    data = world_coords, map = world_coords,
+    fill = "grey",
+    aes(map_id = region)
+  ) +
+  geom_point(
+    data = site_data,
+    aes(x = decimalLongitude, y = decimalLatitude, fill = AA, shape = AA)
+  ) +
+  xlim(-180, 180) +
+  ylim(-90, 90) +
+  scale_shape_manual("Amino acid", values = c(21, 22, 23)) +
+  scale_fill_manual("Amino acid", values = c("white", "brown2", "royalblue2")) +
+  labs(title = "A328G/S", fill = "", shape = "") +
+  cowplot::theme_map() +
+  theme(legend.position = "bottom") +
+  coord_fixed()
+
+#plot all
+map_plot <- cowplot::plot_grid(map1, map2, map3,
+                               nrow = 1,
+                               rel_heights = c(1, 1, 1),
+                               labels = "auto")
+cowplot::save_plot(here::here("analyze", "plots", "fig_s4.png"), plot = map_plot, 
+                   base_height = 4.5, base_asp = 4.5, 
+                   scale = 1.5, dpi = 1000)
+```
+
+# Tree with amino acid heatmap
+
+```{r tree_aa}
+SITE_AXIS_ORDER <- sort(sig_sites)
+
+aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>%
+  filter(Site %in% SITE_AXIS_ORDER) %>%
+  mutate(Ancestral = ifelse(AA == AA_Ancestral,
+                            TRUE,
+                            ifelse(AA == "-",
+                                   NA,
+                                   FALSE))) %>%
+  filter(!is.na(Ancestral)) %>%
+  full_join(full_specific_epithet, by = "ShortName") %>%
+  rename(Species = species) %>%
+  relocate(Species, .before = "ShortName")
+
+full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>%
+  dplyr::select(species) %>%
+  mutate(ShortName = stringr::str_sub(species, 1, 10), .before = "species")
+tree_file <- ape::read.tree(here::here("csubst", "radseq_pruned_csubst.tre")) %>%
+  treeio::rename_taxa(full_specific_epithet)
+
+CLADE_LABEL_OFFSET <- 15
+tree <- ggtree(tree_file) +
+  geom_tiplab(hjust = -0.025, size = 2.5, fontface = "italic", align = TRUE, offset = 0.001) +
+  geom_cladelabel(node = 194, label = "Succotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 220, label = "Lobata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 227, label = "Sambucina", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 230, label = "Coriacea", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 232, label = "Opulus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 154, label = "Oreinotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 185, label = "Dentata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 187, label = "Mollotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 235, label = "Tinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 247, label = "Solenotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 262, label = "Lutescentia", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 268, label = "Euviburnum", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 284, label = "Lentago", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 290, label = "Punctata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 292, label = "Pseudotinus", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 295, label = "Urceolata", offset = CLADE_LABEL_OFFSET) +
+  geom_cladelabel(node = 191, label = "Laminotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 152, label = "Porphyrotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 246, label = "Crenotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  geom_cladelabel(node = 267, label = "Valvotinus", offset = CLADE_LABEL_OFFSET + 15) +
+  theme(legend.position = "none") +
+  hexpand(0.04, direction = 1) +
+  xlim_tree(c(-0.0025, 0.035)) +
+  coord_cartesian(clip="off")
+# tree
+
+heatmap <- ggplot(aa, aes(x = factor(as.character(Site), levels = SITE_AXIS_ORDER), y = Species, fill = Ancestral)) +
+  geom_tile() +
+  geom_text(aes(label = AA), size = 2) +
+  scale_fill_manual(values = c("brown2", "grey")) +
+  cowplot::theme_cowplot(font_size = 10) +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.position = "none")
+# heatmap
+
+tree_heatmap <- heatmap %>%
+  aplot::insert_left(tree, width = 3.5)
+
+cowplot::save_plot(here::here("analyze", "plots", "fig_s2.svg"), plot = tree_heatmap, base_width = 11, base_height = 11)
+```
+
+# Gene tree - supplemental
+
+```{r gene_tree}
+
+library(ggtree)
+
+full_specific_epithet <- readr::read_csv(here::here("download", "metadata.csv")) %>%
+  dplyr::select(species) %>%
+  mutate(ShortName = stringr::str_sub(species, 1, 10), .before = "species")
+
+clades <- readr::read_csv(here::here("csubst", "analysis", "landis_clades.csv")) %>%
+  rename(ShortName = Taxa) %>%
+  full_join(full_specific_epithet) %>%
+  mutate(Clade = stringr::str_to_title(Clade)) %>%
+  filter(!Clade %in% c("Laminotinus", "Porphyrotinus", "Crenotinus", "Valvatotinus")) %>%
+  relocate(species, .before = "Clade")
+
+gene_tree <- ape::read.tree(here::here("iqtree", "clean_aligned.phylip.treefile")) %>% 
+  treeio::rename_taxa(full_specific_epithet) %>%
+  ape::root("clemensiae")
+
+gene_tree_plot <- ggtree(gene_tree) %<+% clades +
+  geom_tippoint(aes(fill = Clade, shape = Clade)) +
+  geom_tiplab(size = 2.5, fontface = "italic", offset = 0.001) +
+  geom_text2(aes(subset = !isTip, label=label, hjust = -0.25), size = 1.5) +
+  # theme(legend.position = "none") +
+  scale_fill_manual(labels = function(breaks) {breaks[is.na(breaks)] <- "none"; breaks},
+                    values = c("#7FC97F", "#7FC97F", "#7FC97F", 
+                               "#BEAED4", "#BEAED4", "#BEAED4", 
+                               "#FDC086", "#FDC086", "#FDC086", 
+                               "#FFFF99", "#FFFF99", "#FFFF99", 
+                               "#386CB0", "#386CB0", "#386CB0", 
+                               "#F0027F", "#F0027F")) +
+  scale_shape_manual(labels = function(breaks) {breaks[is.na(breaks)] <- "none"; breaks},
+                     values = c(21, 23, 24, 
+                                21, 23, 24, 
+                                21, 23, 24, 
+                                21, 23, 24, 
+                                21, 23, 24, 
+                                21, 1)) +
+  labs(fill = "Clade", shape = "Clade") +
+  coord_cartesian(clip="off")
+gene_tree_plot
+
+ggsave(here::here("analyze", "plots", "fig_s1.svg"), plot = gene_tree_plot, width = 8.5, height = 11)
+
+```
+
+# Biome/range transition
+
+```{r}
+aa <- readr::read_csv(here::here("analyze", "aa_at_sites_ancestral.csv")) %>%
+  filter(AA != "-")
+
+# BIOME
+
+biome <- readr::read_csv(here::here("landis_biome_range", "landis_biomes.csv")) %>%
+  mutate(Species = stringr::str_replace(Species, "_", "-")) %>%
+  mutate(ShortName = stringr::str_sub(Species, 1, 10))
+biome_aa <- full_join(biome, aa) %>%
+  filter(!is.na(Biome)) %>% # some species do not have biome assignments
+  filter(!is.na(AA)) %>% # some species were not sequenced for rbcL
+  summarise(n = n(), .by = c(AA, Site, Biome))
+biome_aa_chisq <- biome_aa %>%
+  tidyr::pivot_wider(names_from = "Biome",
+                     values_from = "n",
+                     values_fill = 0) %>%
+  select(!AA) %>%
+  group_by(Site) %>%
+  tidyr::nest(.key = "ContingencyTable") %>%
+  mutate(ChiSq = map(ContingencyTable, ~rstatix::chisq_test(., simulate.p.value = TRUE))) %>%
+  unnest(ChiSq) %>%
+  mutate(p.signif = stringr::str_replace(p.signif, "ns", "")) %>%
+  select(Site, p.signif)
+biome_aa_summary <- biome_aa %>%
+  left_join(aa) %>%
+  left_join(biome_aa_chisq) %>%
+  mutate(AA = reorder(AA, desc(Ancestral))) %>%
+  mutate(Ancestral = ifelse(Ancestral, "Ancestral", "Derived")) %>%
+  mutate(SiteP = reorder(stringr::str_c(p.signif, Site), Site))
+
+biome_plot <- ggpubr::ggballoonplot(biome_aa_summary,
+                                          x = "AA",
+                                          y = "Biome",
+                                          size = "n",
+                                          fill = "Ancestral") +
+  scale_fill_manual(values = c("grey", "brown2")) +
+  labs(x = "", y = "", size = bquote(italic(n))) +
+  guides(fill = "none") +
+  cowplot::theme_cowplot() +
+  cowplot::panel_border(color = "black") +
+  theme(axis.line = element_blank(),
+        panel.grid = element_blank(),
+        panel.spacing = unit(5, "pt"),
+        strip.text.x = element_text(hjust = 1),
+        strip.background = element_blank()) +
+  facet_wrap(~ SiteP, scales = "free_x")
+ggsave(here::here("analyze", "plots", "fig_s5.svg"), biome_plot, width = 7, height = 8)
+# ggsave(here::here("analyze", "plots", "biome.pdf"), biome_plot, width = 7, height = 8)
+
+# RANGE
+
+range <- readr::read_csv(here::here("landis_biome_range", "landis_ranges.csv")) %>%
+  mutate(Species = stringr::str_replace(Species, "_", "-")) %>%
+  mutate(ShortName = stringr::str_sub(Species, 1, 10))
+range_aa <- full_join(range, aa) %>%
+  filter(!is.na(Range)) %>% # some species do not have biome assignments
+  filter(!is.na(AA)) %>% # some species were not sequenced for rbcL
+  summarise(n = n(), .by = c(AA, Site, Range))
+range_aa_chisq <- range_aa %>%
+  tidyr::pivot_wider(names_from = "Range",
+                     values_from = "n",
+                     values_fill = 0) %>%
+  select(!AA) %>%
+  group_by(Site) %>%
+  tidyr::nest(.key = "ContingencyTable") %>%
+  mutate(ChiSq = map(ContingencyTable, ~rstatix::chisq_test(., simulate.p.value = TRUE))) %>%
+  unnest(ChiSq) %>%
+  mutate(p.signif = stringr::str_replace(p.signif, "ns", "")) %>%
+  select(Site, p.signif)
+range_aa_summary <- range_aa %>%
+  left_join(aa) %>%
+  left_join(range_aa_chisq) %>%
+  mutate(AA = reorder(AA, desc(Ancestral))) %>%
+  mutate(Ancestral = ifelse(Ancestral, "Ancestral", "Derived")) %>%
+  mutate(SiteP = reorder(stringr::str_c(p.signif, Site), Site))
+
+range_plot <- ggpubr::ggballoonplot(range_aa_summary,
+                                          x = "AA",
+                                          y = "Range",
+                                          size = "n",
+                                          fill = "Ancestral") +
+  scale_fill_manual(values = c("grey", "brown2")) +
+  labs(x = "", y = "", size = bquote(italic(n))) +
+  guides(fill = "none") +
+  cowplot::theme_cowplot() +
+  cowplot::panel_border(color = "black") +
+  theme(axis.line = element_blank(),
+        panel.grid = element_blank(),
+        panel.spacing = unit(5, "pt"),
+        strip.text.x = element_text(hjust = 1),
+        strip.background = element_blank()) +
+  facet_wrap(~ SiteP, scales = "free_x")
+ggsave(here::here("analyze", "plots", "fig_s6.svg"), range_plot, width = 7, height = 10)
+# ggsave(here::here("analyze", "plots", "range.pdf"), range_plot, width = 7, height = 10)
+
+
+```

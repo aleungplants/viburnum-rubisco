@@ -1,0 +1,247 @@
+IQ-TREE multicore version 2.0.3 for Mac OS X 64-bit built Dec 19 2020
+Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor,
+Heiko Schmidt, Dominik Schrempf, Michael Woodhams.
+
+Host:    AL-MBA.local (SSE4.2, 16 GB RAM)
+Command: iqtree -s ../clean_aligned_csubst.fasta -te tmp.csubst.nwk -m ECMK07+F+R4 --seqtype CODON11 --threads-max 3 -T AUTO --ancestral --rate --redo
+Seed:    675915 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Mon Mar 27 11:58:37 2023
+Kernel:  SSE2 - auto-detect threads (8 CPU cores detected)
+
+Reading alignment file ../clean_aligned_csubst.fasta ... Fasta format detected
+Alignment most likely contains DNA/RNA sequences
+Converting to codon sequences with genetic code 11 ...
+WARNING: Sequence subsessile has ambiguous character -CT at site 7
+WARNING: Sequence lentago has ambiguous character --G at site 16
+WARNING: Sequence burejaetic has ambiguous character -CT at site 94
+WARNING: Sequence acerifoliu has ambiguous character CNN at site 298
+WARNING: Sequence ayavacense has ambiguous character GG- at site 490
+WARNING: Sequence obtectum has ambiguous character GG- at site 490
+WARNING: Sequence divaricatu has ambiguous character GG- at site 490
+WARNING: Sequence hallii has ambiguous character GG- at site 490
+WARNING: Sequence venustum has ambiguous character GG- at site 490
+WARNING: Sequence microcarpu has ambiguous character GG- at site 490
+WARNING: Sequence seemenii has ambiguous character GG- at site 490
+WARNING: Sequence discolor has ambiguous character GG- at site 490
+WARNING: Sequence villosum has ambiguous character GG- at site 490
+WARNING: Sequence stipitatum has ambiguous character GG- at site 490
+WARNING: Sequence recognitum has ambiguous character GG- at site 490
+WARNING: Sequence australe has ambiguous character GG- at site 490
+WARNING: Sequence pichinchen has ambiguous character GG- at site 490
+WARNING: Sequence ciliatum has ambiguous character GG- at site 490
+WARNING: Sequence lancifoliu has ambiguous character GG- at site 490
+WARNING: Sequence hupehense has ambiguous character --A at site 598
+WARNING: Sequence treleasei has ambiguous character GG- at site 640
+WARNING: Sequence lasiophyll has ambiguous character --C at site 646
+WARNING: Sequence opulus has ambiguous character CT- at site 772
+WARNING: Sequence elatum has ambiguous character C-- at site 799
+WARNING: Sequence veitchii has ambiguous character AG- at site 814
+WARNING: Sequence subsessile has ambiguous character G-- at site 1036
+WARNING: Sequence acerifoliu has ambiguous character GAN at site 1246
+WARNING: Sequence cylindricu has ambiguous character G-- at site 1318
+WARNING: Sequence henryi has ambiguous character AC- at site 1327
+WARNING: Sequence lepidotulu has ambiguous character AC- at site 1327
+WARNING: Sequence disjunctum has ambiguous character AC- at site 1327
+WARNING: Sequence grandiflor has ambiguous character AC- at site 1327
+WARNING: Sequence awabuki has ambiguous character AC- at site 1327
+WARNING: Sequence taitoense has ambiguous character AC- at site 1327
+WARNING: Sequence davidii has ambiguous character AC- at site 1327
+WARNING: Sequence cotinifoli has ambiguous character AC- at site 1327
+WARNING: Sequence foetens has ambiguous character AC- at site 1327
+WARNING: Sequence amplificat has ambiguous character AC- at site 1327
+WARNING: Sequence corylifoli has ambiguous character AC- at site 1327
+WARNING: Sequence awabuki has ambiguous character --T at site 1330
+WARNING: Sequence formosanum has ambiguous character -AT at site 1330
+Alignment has 148 sequences with 444 columns, 292 distinct patterns
+45 parsimony-informative, 22 singleton sites, 377 constant sites
+            Gap/Ambiguity  Composition  p-value
+   1  luzonicum     0.00%    passed    100.00%
+   2  lautum        0.00%    passed    100.00%
+   3  plicatum      0.00%    passed    100.00%
+   4  tinoides     26.58%    passed    100.00%
+   5  cassinoide    0.00%    passed    100.00%
+   6  clemensiae    0.00%    passed    100.00%
+   7  brachybotr    1.80%    passed    100.00%
+   8  atrocyaneu    0.00%    passed    100.00%
+   9  colebrooke    0.00%    passed    100.00%
+  10  ichangense    0.00%    passed    100.00%
+  11  hispidulum    0.00%    passed    100.00%
+  12  ayavacense   63.29%    passed    100.00%
+  13  obtusatum    39.19%    passed     99.98%
+  14  punctatum     0.00%    passed    100.00%
+  15  dilatatum     0.00%    passed    100.00%
+  16  betulifoli    0.00%    passed    100.00%
+  17  phlebotric    0.00%    passed    100.00%
+  18  ellipticum    0.00%    passed    100.00%
+  19  brachyandr    0.00%    passed    100.00%
+  20  toronis       0.00%    passed    100.00%
+  21  mongolicum    0.00%    passed    100.00%
+  22  cylindricu    1.13%    passed    100.00%
+  23  urceolatum    0.00%    passed    100.00%
+  24  obtectum     63.29%    passed    100.00%
+  25  setigerum     0.00%    passed    100.00%
+  26  foetidum      0.00%    passed    100.00%
+  27  erubescens    0.00%    passed    100.00%
+  28  mullaha       0.00%    passed    100.00%
+  29  chinshanen    0.00%    passed    100.00%
+  30  stenocalyx    0.00%    passed    100.00%
+  31  lantana       0.00%    passed    100.00%
+  32  prunifoliu    0.00%    passed    100.00%
+  33  divaricatu   63.29%    passed    100.00%
+  34  henryi        0.45%    passed    100.00%
+  35  dentatum      0.00%    passed    100.00%
+  36  glomeratum    0.00%    passed    100.00%
+  37  microphyll    0.00%    passed    100.00%
+  38  flavescens    0.00%    passed    100.00%
+  39  calvum        0.00%    passed    100.00%
+  40  scabrellum   38.96%    passed    100.00%
+  41  lutescens     0.00%    passed    100.00%
+  42  loeseneri     0.00%    passed    100.00%
+  43  brevipes     63.29%    passed     99.99%
+  44  rafinesqui    0.00%    passed    100.00%
+  45  integrifol    0.00%    passed    100.00%
+  46  glaberrimu    0.90%    passed    100.00%
+  47  pyramidatu    0.00%    passed    100.00%
+  48  sieboldii     0.00%    passed    100.00%
+  49  sulcatum     39.19%    passed     99.96%
+  50  ternatum      0.00%    passed    100.00%
+  51  subalpinum    0.00%    passed    100.00%
+  52  hebanthum     0.00%    passed    100.00%
+  53  utile         0.00%    passed    100.00%
+  54  taiwanianu    0.00%    passed    100.00%
+  55  rufidulum     0.00%    passed    100.00%
+  56  lepidotulu    0.45%    passed    100.00%
+  57  disjunctum    0.45%    passed    100.00%
+  58  hallii       63.29%    passed    100.00%
+  59  triphyllum    0.00%    passed    100.00%
+  60  grandiflor    0.45%    passed    100.00%
+  61  buddleifol    0.00%    passed    100.00%
+  62  awabuki       0.45%    passed    100.00%
+  63  edule         0.00%    passed     99.34%
+  64  erosum        0.00%    passed    100.00%
+  65  venustum     63.29%    passed     99.99%
+  66  microcarpu   63.29%    passed    100.00%
+  67  taitoense     0.45%    passed    100.00%
+  68  sambucinum    0.00%    passed    100.00%
+  69  davidii       0.45%    passed    100.00%
+  70  acutifoliu   39.19%    passed     99.96%
+  71  leiocarpum    0.00%    passed    100.00%
+  72  furcatum      1.13%    passed    100.00%
+  73  schensianu    0.00%    passed    100.00%
+  74  tinus         0.00%    passed    100.00%
+  75  wrightii      0.00%    passed    100.00%
+  76  trilobum      0.00%    passed     98.41%
+  77  treleasei    52.03%    passed    100.00%
+  78  sympodiale   40.77%    passed    100.00%
+  79  anamensis     0.00%    passed    100.00%
+  80  odoratissi    0.00%    passed    100.00%
+  81  coriaceum     0.00%    passed    100.00%
+  82  bitchiuens    0.00%    passed    100.00%
+  83  propinquum    0.00%    passed    100.00%
+  84  adenophoru    0.00%    passed    100.00%
+  85  seemenii     63.29%    passed    100.00%
+  86  discolor     63.29%    passed    100.00%
+  87  macrocepha    0.00%    passed    100.00%
+  88  formosanum    0.23%    passed    100.00%
+  89  lobophyllu    0.00%    passed    100.00%
+  90  yunnanense    0.00%    passed    100.00%
+  91  veitchii     38.96%    passed    100.00%
+  92  villosum     63.29%    passed    100.00%
+  93  bracteatum    0.00%    passed    100.00%
+  94  stipitatum   63.29%    passed    100.00%
+  95  cotinifoli    0.45%    passed    100.00%
+  96  oliganthum    0.00%    passed    100.00%
+  97  recognitum   63.29%    passed    100.00%
+  98  suspensum     0.00%    passed    100.00%
+  99  beccarii      0.00%    passed    100.00%
+ 100  australe     63.29%    passed    100.00%
+ 101  blandum       0.00%    passed    100.00%
+ 102  jucundum      0.00%    passed    100.00%
+ 103  jamesonii     0.00%    passed    100.00%
+ 104  rugosum       0.00%    passed    100.00%
+ 105  lasiophyll   48.65%    passed     99.89%
+ 106  carlesii      0.00%    passed    100.00%
+ 107  stellato-t    0.00%    passed    100.00%
+ 108  nudum         0.00%    passed    100.00%
+ 109  lantanoide    0.00%    passed    100.00%
+ 110  orientale     0.00%    passed    100.00%
+ 111  hanceanum     2.48%    passed    100.00%
+ 112  undulatum     0.00%    passed    100.00%
+ 113  burejaetic    7.21%    passed    100.00%
+ 114  sempervire    0.00%    passed    100.00%
+ 115  farreri       0.00%    passed    100.00%
+ 116  japonicum     0.00%    passed    100.00%
+ 117  inopinatum    0.00%    passed    100.00%
+ 118  foetens       0.45%    passed    100.00%
+ 119  anabaptist    0.68%    passed    100.00%
+ 120  opulus       42.12%    passed      5.30%
+ 121  elatum       40.09%    passed    100.00%
+ 122  parvifoliu    0.00%    passed    100.00%
+ 123  amplificat    0.45%    passed    100.00%
+ 124  lentago       1.35%    passed    100.00%
+ 125  obovatum      0.00%    passed    100.00%
+ 126  subsessile   22.97%    passed    100.00%
+ 127  cinnamomif    0.00%    passed    100.00%
+ 128  fordiae       0.00%    passed    100.00%
+ 129  vernicosum    0.00%    passed    100.00%
+ 130  chingii       0.00%    passed    100.00%
+ 131  maculatum     0.00%    passed    100.00%
+ 132  pichinchen   63.29%    passed    100.00%
+ 133  brevitubum    0.00%    passed    100.00%
+ 134  ciliatum     63.29%    passed    100.00%
+ 135  nervosum      0.00%    passed    100.00%
+ 136  kansuense     0.00%    passed    100.00%
+ 137  tashiroi      0.00%    passed    100.00%
+ 138  hupehense    45.05%    passed     99.96%
+ 139  corylifoli    0.45%    passed    100.00%
+ 140  amplifoliu    0.00%    passed    100.00%
+ 141  sargentii     0.00%    passed     99.65%
+ 142  glabratum     0.45%    passed    100.00%
+ 143  lancifoliu   63.29%    passed     99.99%
+ 144  molle         0.00%    passed    100.00%
+ 145  congestum     0.00%    passed    100.00%
+ 146  rhytidophy    0.00%    passed    100.00%
+ 147  melanocarp    0.00%    passed    100.00%
+ 148  acerifoliu    0.45%    passed    100.00%
+WARNING: 17 sequences contain more than 50% gaps/ambiguity
+****  TOTAL        10.47%  0 sequences failed composition chi2 test (p-value<5%; df=60)
+WARNING: States(s) ACG, TCA rarely appear in alignment and may cause numerical problems
+Reading input tree file tmp.csubst.nwk ... rooted tree
+
+NOTE: 98 MB RAM (0 GB) is required!
+Measuring multi-threading efficiency up to 3 CPU cores
+3 trees examined
+Threads: 1 / Time: 4.176 sec / Speedup: 1.000 / Efficiency: 100% / LogL: -7830
+Threads: 2 / Time: 2.732 sec / Speedup: 1.528 / Efficiency: 76% / LogL: -7830
+Threads: 3 / Time: 2.300 sec / Speedup: 1.816 / Efficiency: 61% / LogL: -7830
+BEST NUMBER OF THREADS: 3
+
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -75545.778
+2. Current log-likelihood: -4404.260
+3. Current log-likelihood: -4404.187
+Optimal log-likelihood: -4404.182
+Nonsynonymous/synonymous ratio (omega): 1.000
+Transition/transversion ratio (kappa): 1.000
+Site proportion and rates:  (0.251,0.114) (0.237,0.139) (0.215,0.156) (0.297,3.049)
+Parameters optimization took 3 rounds (15.961 sec)
+BEST SCORE FOUND : -4404.182
+Ancestral state probabilities printed to ../clean_aligned_csubst.fasta.state
+Empirical proportions for each category: 0.831 0.000 0.000 0.169
+Site rates printed to ../clean_aligned_csubst.fasta.rate
+Total tree length: 0.250
+
+Total number of iterations: 0
+CPU time used for tree search: 0.000 sec (0h:0m:0s)
+Wall-clock time used for tree search: 0.000 sec (0h:0m:0s)
+Total CPU time used: 69.792 sec (0h:1m:9s)
+Total wall-clock time used: 27.386 sec (0h:0m:27s)
+
+Analysis results written to: 
+  IQ-TREE report:                ../clean_aligned_csubst.fasta.iqtree
+  Maximum-likelihood tree:       ../clean_aligned_csubst.fasta.treefile
+  Site-specific rates:           ../clean_aligned_csubst.fasta.rate
+  Ancestral state:               ../clean_aligned_csubst.fasta.state
+  Screen log file:               ../clean_aligned_csubst.fasta.log
+
+Date and Time: Mon Mar 27 11:59:05 2023

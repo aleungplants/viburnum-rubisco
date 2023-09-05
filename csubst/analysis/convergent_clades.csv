@@ -1,0 +1,48 @@
+branch_id_1,branch_id_2,node1,node2,codon_site_alignment,clade1,clade2,aa_1,aa_2,aa_1_anc,aa_2_anc,taxa1,taxa2
+0,254,acerifoliu,267,444,NA,valvotinus,V,V,I,I,acerifoliu,bitchiuens carlesii congestum schensianu utile macrocepha buddleifol chinshanen rhytidophy glomeratum veitchii lantana maculatum burejaetic mongolicum cotinifoli elatum obovatum prunifoliu rufidulum lentago cassinoide nudum lepidotulu punctatum
+0,261,acerifoliu,224,449,NA,NA,S,S,A,C,acerifoliu,hispidulum vernicosum glaberrimu beccarii
+0,262,acerifoliu,223,95,NA,sambucina,S,S,T,T,acerifoliu,hispidulum vernicosum glaberrimu beccarii inopinatum sambucinum leiocarpum ternatum
+0,262,acerifoliu,223,340,NA,sambucina,E,E,D,D,acerifoliu,hispidulum vernicosum glaberrimu beccarii inopinatum sambucinum leiocarpum ternatum
+0,269,acerifoliu,154,475,NA,oreinotinus,L,L,I,I,acerifoliu,anabaptist subsessile tinoides undulatum glabratum jamesonii lasiophyll hallii pichinchen divaricatu stipitatum obtectum triphyllum seemenii toronis ayavacense obtusatum disjunctum stellato-t villosum jucundum lautum acutifoliu sulcatum venustum blandum microphyll discolor microcarpu ciliatum stenocalyx loeseneri
+33,92,clemensiae,lantanoide,117,NA,NA,L,L,F,F,clemensiae,lantanoide
+33,92,clemensiae,lantanoide,279,NA,NA,S,S,T,T,clemensiae,lantanoide
+33,152,clemensiae,290,219,NA,punctata,V,V,L,L,clemensiae,lepidotulu punctatum
+33,227,clemensiae,trilobum,279,NA,NA,S,S,T,T,clemensiae,trilobum
+33,262,clemensiae,223,219,NA,sambucina,V,V,L,L,clemensiae,hispidulum vernicosum glaberrimu beccarii inopinatum sambucinum leiocarpum ternatum
+68,121,258,nervosum,251,NA,NA,I,I,M,M,foetens grandiflor,nervosum
+68,121,258,nervosum,279,NA,NA,S,S,T,T,foetens grandiflor,nervosum
+68,121,258,nervosum,309,NA,NA,I,I,M,M,foetens grandiflor,nervosum
+68,121,258,nervosum,328,NA,NA,S,S,A,A,foetens grandiflor,nervosum
+68,227,258,trilobum,251,NA,NA,I,I,M,M,foetens grandiflor,trilobum
+68,227,258,trilobum,279,NA,NA,S,S,T,T,foetens grandiflor,trilobum
+81,254,204,267,225,NA,valvotinus,I,I,L,L,flavescens ichangense,bitchiuens carlesii congestum schensianu utile macrocepha buddleifol chinshanen rhytidophy glomeratum veitchii lantana maculatum burejaetic mongolicum cotinifoli elatum obovatum prunifoliu rufidulum lentago cassinoide nudum lepidotulu punctatum
+92,135,lantanoide,orientale,255,NA,NA,I,I,V,V,lantanoide,orientale
+92,135,lantanoide,orientale,262,NA,NA,A,A,V,V,lantanoide,orientale
+92,152,lantanoide,290,255,NA,punctata,I,I,V,V,lantanoide,lepidotulu punctatum
+92,276,lantanoide,195,262,NA,NA,A,A,V,V,lantanoide,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+121,227,nervosum,trilobum,251,NA,NA,I,I,M,M,nervosum,trilobum
+121,227,nervosum,trilobum,279,NA,NA,S,S,T,T,nervosum,trilobum
+121,229,nervosum,232,309,NA,opulus,I,I,M,M,nervosum,opulus sargentii trilobum edule
+121,290,nervosum,245,251,NA,NA,I,I,M,M,nervosum,erubescens oliganthum brevitubum brachybotr henryi chingii yunnanense foetens grandiflor farreri suspensum taitoense subalpinum awabuki odoratissi sieboldii hanceanum plicatum colebrooke lutescens pyramidatu amplifoliu amplificat
+123,277,289,194,225,NA,succotinus,L,L,I,I,cassinoide nudum,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol betulifoli hupehense lobophyllu melanocarp mullaha foetidum
+127,265,obtusatum,174,76,NA,NA,S,S,N,N,obtusatum,disjunctum stellato-t villosum
+135,152,orientale,290,255,NA,punctata,I,I,V,V,orientale,lepidotulu punctatum
+135,152,orientale,290,317,NA,punctata,G,G,A,A,orientale,lepidotulu punctatum
+135,276,orientale,195,226,NA,NA,F,F,Y,Y,orientale,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+135,276,orientale,195,249,NA,NA,E,E,D,D,orientale,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+135,276,orientale,195,262,NA,NA,A,A,V,V,orientale,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+135,276,orientale,195,317,NA,NA,G,G,A,A,orientale,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+135,277,orientale,194,225,NA,succotinus,L,L,I,I,orientale,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol betulifoli hupehense lobophyllu melanocarp mullaha foetidum
+145,198,264,subalpinum,279,NA,NA,T,T,S,S,hanceanum plicatum,subalpinum
+145,198,264,subalpinum,328,NA,NA,S,S,A,A,hanceanum plicatum,subalpinum
+145,286,264,249,251,NA,NA,M,M,I,I,hanceanum plicatum,erubescens oliganthum brevitubum brachybotr henryi chingii yunnanense foetens grandiflor farreri suspensum taitoense
+145,286,264,249,279,NA,NA,T,T,S,S,hanceanum plicatum,erubescens oliganthum brevitubum brachybotr henryi chingii yunnanense foetens grandiflor farreri suspensum taitoense
+152,262,290,223,219,punctata,sambucina,V,V,L,L,lepidotulu punctatum,hispidulum vernicosum glaberrimu beccarii inopinatum sambucinum leiocarpum ternatum
+152,276,290,195,317,punctata,NA,G,G,A,A,lepidotulu punctatum,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+160,174,187,228,340,mollotinus,NA,D,D,E,E,molle rafinesqui bracteatum australe ellipticum,inopinatum sambucinum leiocarpum
+160,174,187,228,459,mollotinus,NA,S,S,C,C,molle rafinesqui bracteatum australe ellipticum,inopinatum sambucinum leiocarpum
+169,242,284,295,449,lentago,urceolata,S,S,C,C,elatum obovatum prunifoliu rufidulum lentago cassinoide nudum,taiwanianu urceolatum
+227,290,trilobum,245,251,NA,NA,I,I,M,M,trilobum,erubescens oliganthum brevitubum brachybotr henryi chingii yunnanense foetens grandiflor farreri suspensum taitoense subalpinum awabuki odoratissi sieboldii hanceanum plicatum colebrooke lutescens pyramidatu amplifoliu amplificat
+228,276,233,195,226,NA,NA,F,F,Y,Y,opulus sargentii trilobum,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol
+242,289,295,246,449,urceolata,crenotinus,S,S,C,C,taiwanianu urceolatum,erubescens oliganthum brevitubum brachybotr henryi chingii yunnanense foetens grandiflor farreri suspensum taitoense subalpinum awabuki odoratissi sieboldii hanceanum plicatum colebrooke lutescens pyramidatu amplifoliu
+261,276,224,195,249,NA,NA,E,E,D,D,hispidulum vernicosum glaberrimu beccarii,brevipes corylifoli dilatatum parvifoliu flavescens ichangense adenophoru wrightii anamensis sempervire brachyandr erosum phlebotric setigerum fordiae formosanum luzonicum tashiroi japonicum lancifoliu integrifol

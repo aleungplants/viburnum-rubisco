@@ -1,0 +1,128 @@
+hide
+show cartoon
+set bg_rgb, [1,1,1]
+set cartoon_side_chain_helper, 1
+set ray_shadow, 0
+set stick_radius, 0.15
+set cartoon_loop_cap, 2
+set cartoon_smooth_loops, 1
+set cartoon_loop_quality, 10
+set cartoon_loop_radius, 0.16
+set cartoon_rect_width, 0.3
+set cartoon_fancy_helices, 1
+set cartoon_fancy_sheets, 1
+set cartoon_tube_radius, 0.4
+set cartoon_ring_mode, 3
+set cartoon_ring_width, 0.1
+set cartoon_ring_finder, 1
+set cartoon_ladder_mode, 1
+set cartoon_nucleic_acid_mode, 4
+set cartoon_ring_transparency, 0.5
+set ray_trace_mode, 1
+set ray_opaque_background, 1
+set antialias, 1
+
+hide cartoon, not chain A
+set cartoon_transparency, 0.7
+color grey80, c. A
+
+show sticks, c. A and i. 477
+color forest, c. A and i. 477
+
+show sticks, c. A and i. 76+95+219+225+226+249+251+255+262+279+309+317+328+340+449+475
+set stick_color, red, c. A and i. 76+95+219+225+226+249+251+255+262+279+309+317+328+340+449+475
+label c. A and n. CA and i. 76+95+219+225+226+249+251+255+262+279+309+317+328+340+449+475, "%s" % (resi)
+
+show sticks, c. A and i. 331-338
+color marine, c. A and i. 331-338
+set cartoon_transparency, 0, c. A and i. 331-338
+label c. A and n. CA and i. 331, "Loop 6"
+
+set label_size, 28
+
+edit_mode
+
+show sphere, c. A and i. 331-338+76+95+219+225+226+249+251+255+262+279+309+317+328+340+449+475
+set sphere_color, red, c. A and i. 76+95+219+225+226+249+251+255+262+279+309+317+328+340+449+475
+set sphere_color, marine, c. A and i. 331-338
+set sphere_transparency, 0.8
+
+ray 5000,5000
+png C:\Users\aqual\OneDrive - University of Toronto\Viburnum rubisco\structure\macrostructure.png
+
+---
+
+hide
+show cartoon, not c. A
+show sticks, c. A
+set bg_rgb, [1,1,1]
+set cartoon_side_chain_helper, 1
+set ray_shadow, 0
+set stick_radius, 0.15
+set cartoon_loop_cap, 2
+set cartoon_smooth_loops, 1
+set cartoon_loop_quality, 10
+set cartoon_loop_radius, 0.16
+set cartoon_rect_width, 0.3
+set cartoon_fancy_helices, 1
+set cartoon_fancy_sheets, 1
+set cartoon_tube_radius, 0.4
+set cartoon_ring_mode, 3
+set cartoon_ring_width, 0.1
+set cartoon_ring_finder, 1
+set cartoon_ladder_mode, 1
+set cartoon_nucleic_acid_mode, 4
+set cartoon_ring_transparency, 0.5
+set ray_trace_mode, 1
+set ray_opaque_background, 1
+set antialias, 1
+
+color grey40, not c. A
+color grey80, c. A
+
+show sticks, i. 477
+color forest, i. 477
+
+show sticks, c. A and i. 219+262+328
+color white, c. A and i. 219+262+328
+color red, c. A and i. 219+262+328 and elem O
+color blue, c. A and i. 219+262+328 and elem N
+color gold, c. A and i. 219+262+328 and elem S
+set label_size, 72
+set h_bond_cutoff_center, 3.65
+
+*mutagenesis wizard*
+
+select n. SG and i. 219
+select n. OG1 and i. 262
+select n. OG and i. 328
+(sele) "A" > find > polar contacts > to any other atoms
+
+
+
+label c. A and n. CA and i. 328, "%s%s" % (oneletter, resi)
+label c. A and n. CA and i. 329+377, "%s%s" % (oneletter, resi)
+color white, c. A and i. 329+377
+color red, c. A and i. 329+377 and elem O
+color blue, c. A and i. 329+377 and elem N
+color gold, c. A and i. 329+377 and elem S
+ray 2000,2000
+png C:\Users\aqual\OneDrive - University of Toronto\Viburnum rubisco\structure\s328.png
+
+label c. L and n. CA and i. 61, "rubisco S\nsubunit"
+label c. A and n. CA and i. 215, "rubisco L\nsubunit"
+label c. A and n. CA and i. 219, "%s%s" % (oneletter, resi)
+ray 2000,2000
+png C:\Users\aqual\OneDrive - University of Toronto\Viburnum rubisco\structure\c219.png
+
+label c. A and n. CA and i. 262, "%s%s" % (oneletter, resi)
+show sphere, resn hoh
+color lightblue, resn hoh
+set sphere_scale, 0.15
+label c. A and n. CA and i. 257, "%s%s" % (oneletter, resi)
+color white, c. A and i. 257
+color red, c. A and i. 257 and elem O
+color blue, c. A and i. 257 and elem N
+color gold, c. A and i. 257 and elem S
+ray 2000,2000
+png C:\Users\aqual\OneDrive - University of Toronto\Viburnum rubisco\structure\t262.png

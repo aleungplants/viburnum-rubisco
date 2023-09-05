@@ -1,0 +1,587 @@
+IQ-TREE multicore version 2.2.0 COVID-edition for Windows 64-bit built Jun  1 2022
+Developed by Bui Quang Minh, James Barbetti, Nguyen Lam Tung,
+Olga Chernomor, Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan.
+
+Host:    AL-PC (AVX2, FMA3, 31 GB RAM)
+Command: C:\Users\aqual\OneDrive - University of Toronto\Viburnum rubisco\iqtree\iqtree2.exe -s clean_aligned.phylip -m MFP -B 5000 -T 3 -redo
+Seed:    689734 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Fri Jun 09 11:37:46 2023
+Kernel:  AVX+FMA - 3 threads (16 CPU cores detected)
+
+Reading alignment file clean_aligned.phylip ... Phylip format detected
+Alignment most likely contains DNA/RNA sequences
+Constructing alignment: done in 0.0011244 secs
+Alignment has 148 sequences with 1332 columns, 160 distinct patterns
+55 parsimony-informative, 26 singleton sites, 1251 constant sites
+            Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 3.86e-05 secs
+   1  luzonicum     0.00%    passed     99.77%
+   2  lautum        0.00%    passed     99.83%
+   3  plicatum      0.00%    passed     99.81%
+   4  tinoides     26.58%    passed     84.29%
+   5  cassinoide    0.00%    passed     99.03%
+   6  clemensiae    0.00%    passed     98.74%
+   7  brachybotr    1.80%    passed     99.75%
+   8  atrocyaneu    0.00%    passed     99.66%
+   9  colebrooke    0.00%    passed     99.98%
+  10  ichangense    0.00%    passed     99.91%
+  11  hispidulum    0.00%    passed     98.35%
+  12  ayavacense   63.14%    passed     77.31%
+  13  obtusatum    39.19%    passed     64.23%
+  14  punctatum     0.00%    passed     98.51%
+  15  dilatatum     0.00%    passed     99.78%
+  16  betulifoli    0.00%    passed     99.91%
+  17  phlebotric    0.00%    passed     99.89%
+  18  ellipticum    0.00%    passed     99.24%
+  19  brachyandr    0.00%    passed     99.78%
+  20  toronis       0.00%    passed     99.57%
+  21  mongolicum    0.00%    passed     99.25%
+  22  cylindricu    1.05%    passed     99.92%
+  23  urceolatum    0.00%    passed     99.95%
+  24  obtectum     63.14%    passed     76.21%
+  25  setigerum     0.00%    passed     99.77%
+  26  foetidum      0.00%    passed     99.89%
+  27  erubescens    0.00%    passed     99.21%
+  28  mullaha       0.00%    passed     99.89%
+  29  chinshanen    0.00%    passed     99.36%
+  30  stenocalyx    0.00%    passed     99.39%
+  31  lantana       0.00%    passed     99.67%
+  32  prunifoliu    0.00%    passed     98.98%
+  33  divaricatu   63.14%    passed     76.21%
+  34  henryi        0.30%    passed     98.97%
+  35  dentatum      0.00%    passed     99.62%
+  36  glomeratum    0.00%    passed     99.36%
+  37  microphyll    0.00%    passed     99.39%
+  38  flavescens    0.00%    passed     99.91%
+  39  calvum        0.00%    passed     99.66%
+  40  scabrellum   38.96%    passed     74.90%
+  41  lutescens     0.00%    passed     99.24%
+  42  loeseneri     0.00%    passed     99.77%
+  43  brevipes     63.29%    passed     64.94%
+  44  rafinesqui    0.00%    passed     98.68%
+  45  integrifol    0.00%    passed     99.77%
+  46  glaberrimu    0.90%    passed     97.62%
+  47  pyramidatu    0.00%    passed     99.24%
+  48  sieboldii     0.00%    passed     99.95%
+  49  sulcatum     39.19%    passed     67.46%
+  50  ternatum      0.00%    passed     97.94%
+  51  subalpinum    0.00%    passed     99.63%
+  52  hebanthum     0.00%    passed     99.97%
+  53  utile         0.00%    passed     99.52%
+  54  taiwanianu    0.00%    passed     99.95%
+  55  rufidulum     0.00%    passed     98.98%
+  56  lepidotulu    0.30%    passed     98.92%
+  57  disjunctum    0.30%    passed     99.84%
+  58  hallii       63.14%    passed     76.21%
+  59  triphyllum    0.00%    passed     99.83%
+  60  grandiflor    0.30%    passed     99.77%
+  61  buddleifol    0.00%    passed     99.36%
+  62  awabuki       0.23%    passed     99.89%
+  63  edule         0.00%    passed     98.38%
+  64  erosum        0.00%    passed     99.78%
+  65  venustum     63.14%    passed     76.21%
+  66  microcarpu   63.14%    passed     76.21%
+  67  taitoense     0.30%    passed     99.75%
+  68  sambucinum    0.00%    passed     99.50%
+  69  davidii       0.30%    passed     99.75%
+  70  acutifoliu   39.19%    passed     67.46%
+  71  leiocarpum    0.00%    passed     99.50%
+  72  furcatum      1.13%    passed     99.81%
+  73  schensianu    0.00%    passed     99.52%
+  74  tinus         0.00%    passed     98.23%
+  75  wrightii      0.00%    passed     99.89%
+  76  trilobum      0.00%    passed     99.22%
+  77  treleasei    51.88%    passed     89.75%
+  78  sympodiale   40.77%    passed     58.79%
+  79  anamensis     0.00%    passed     99.77%
+  80  odoratissi    0.00%    passed     99.80%
+  81  coriaceum     0.00%    passed     99.88%
+  82  bitchiuens    0.00%    passed     99.67%
+  83  propinquum    0.00%    passed     99.67%
+  84  adenophoru    0.00%    passed     99.78%
+  85  seemenii     63.14%    passed     77.31%
+  86  discolor     63.14%    passed     76.21%
+  87  macrocepha    0.00%    passed     99.55%
+  88  formosanum    0.08%    passed     99.65%
+  89  lobophyllu    0.00%    passed     99.91%
+  90  yunnanense    0.00%    passed     99.21%
+  91  veitchii     38.81%    passed     68.76%
+  92  villosum     63.14%    passed     77.31%
+  93  bracteatum    0.00%    passed     98.68%
+  94  stipitatum   63.14%    passed     76.21%
+  95  cotinifoli    0.30%    passed     99.59%
+  96  oliganthum    0.00%    passed     99.21%
+  97  recognitum   63.14%    passed     77.31%
+  98  suspensum     0.00%    passed     99.52%
+  99  beccarii      0.00%    passed     98.93%
+ 100  australe     63.14%    passed     83.23%
+ 101  blandum       0.00%    passed     99.59%
+ 102  jucundum      0.00%    passed     99.83%
+ 103  jamesonii     0.00%    passed     99.83%
+ 104  rugosum       0.00%    passed     97.43%
+ 105  lasiophyll   48.57%    passed     73.00%
+ 106  carlesii      0.00%    passed     99.67%
+ 107  stellato-t    0.00%    passed     99.88%
+ 108  nudum         0.00%    passed     99.43%
+ 109  lantanoide    0.00%    passed     99.16%
+ 110  orientale     0.00%    passed     99.73%
+ 111  hanceanum     2.48%    passed     99.74%
+ 112  undulatum     0.00%    passed     99.83%
+ 113  burejaetic    7.06%    passed     92.30%
+ 114  sempervire    0.00%    passed     99.77%
+ 115  farreri       0.00%    passed     99.52%
+ 116  japonicum     0.00%    passed     99.77%
+ 117  inopinatum    0.00%    passed     99.50%
+ 118  foetens       0.30%    passed     99.95%
+ 119  anabaptist    0.68%    passed     99.86%
+ 120  opulus       41.97%    passed     84.07%
+ 121  elatum       40.02%    passed     67.18%
+ 122  parvifoliu    0.00%    passed     99.77%
+ 123  amplificat    0.30%    passed     99.96%
+ 124  lentago       1.28%    passed     98.33%
+ 125  obovatum      0.00%    passed     99.33%
+ 126  subsessile   22.75%    passed     90.42%
+ 127  cinnamomif    0.00%    passed     99.55%
+ 128  fordiae       0.00%    passed     99.78%
+ 129  vernicosum    0.00%    passed     98.35%
+ 130  chingii       0.00%    passed     99.21%
+ 131  maculatum     0.00%    passed     99.67%
+ 132  pichinchen   63.14%    passed     76.21%
+ 133  brevitubum    0.00%    passed     99.21%
+ 134  ciliatum     63.14%    passed     76.21%
+ 135  nervosum      0.00%    passed     99.60%
+ 136  kansuense     0.00%    passed     99.97%
+ 137  tashiroi      0.00%    passed     99.77%
+ 138  hupehense    44.97%    passed     79.73%
+ 139  corylifoli    0.30%    passed     99.35%
+ 140  amplifoliu    0.00%    passed     99.06%
+ 141  sargentii     0.00%    passed     98.94%
+ 142  glabratum     0.45%    passed     99.81%
+ 143  lancifoliu   63.14%    passed     66.21%
+ 144  molle         0.00%    passed     98.68%
+ 145  congestum     0.00%    passed     99.36%
+ 146  rhytidophy    0.00%    passed     99.36%
+ 147  melanocarp    0.00%    passed     99.91%
+ 148  acerifoliu    0.23%    passed     99.47%
+WARNING: 17 sequences contain more than 50% gaps/ambiguity
+****  TOTAL        10.43%  0 sequences failed composition chi2 test (p-value<5%; df=3)
+NOTE: setigerum is identical to luzonicum but kept for subsequent analysis
+NOTE: triphyllum is identical to lautum but kept for subsequent analysis
+NOTE: calvum is identical to atrocyaneu but kept for subsequent analysis
+NOTE: flavescens is identical to ichangense but kept for subsequent analysis
+NOTE: vernicosum is identical to hispidulum but kept for subsequent analysis
+NOTE: seemenii is identical to ayavacense but kept for subsequent analysis
+NOTE: brachyandr is identical to dilatatum but kept for subsequent analysis
+NOTE: wrightii is identical to phlebotric but kept for subsequent analysis
+NOTE: taiwanianu is identical to urceolatum but kept for subsequent analysis
+NOTE: divaricatu is identical to obtectum but kept for subsequent analysis
+NOTE: mullaha is identical to foetidum but kept for subsequent analysis
+NOTE: yunnanense is identical to erubescens but kept for subsequent analysis
+NOTE: glomeratum is identical to chinshanen but kept for subsequent analysis
+NOTE: microphyll is identical to stenocalyx but kept for subsequent analysis
+NOTE: bitchiuens is identical to lantana but kept for subsequent analysis
+NOTE: rufidulum is identical to prunifoliu but kept for subsequent analysis
+NOTE: pyramidatu is identical to lutescens but kept for subsequent analysis
+NOTE: bracteatum is identical to rafinesqui but kept for subsequent analysis
+NOTE: acutifoliu is identical to sulcatum but kept for subsequent analysis
+NOTE: schensianu is identical to utile but kept for subsequent analysis
+NOTE: leiocarpum is identical to sambucinum but kept for subsequent analysis
+NOTE: farreri is identical to suspensum but kept for subsequent analysis
+Checking for duplicate sequences: done in 0.031166 secs using 200.5% CPU
+Identifying sites to remove: done in 0.0011765 secs using 3984% CPU
+NOTE: 32 identical sequences (see below) will be ignored for subsequent analysis
+NOTE: integrifol (identical to luzonicum) is ignored but added at the end
+NOTE: anamensis (identical to luzonicum) is ignored but added at the end
+NOTE: sempervire (identical to luzonicum) is ignored but added at the end
+NOTE: japonicum (identical to luzonicum) is ignored but added at the end
+NOTE: parvifoliu (identical to luzonicum) is ignored but added at the end
+NOTE: tashiroi (identical to luzonicum) is ignored but added at the end
+NOTE: jucundum (identical to lautum) is ignored but added at the end
+NOTE: jamesonii (identical to lautum) is ignored but added at the end
+NOTE: undulatum (identical to lautum) is ignored but added at the end
+NOTE: lobophyllu (identical to ichangense) is ignored but added at the end
+NOTE: melanocarp (identical to ichangense) is ignored but added at the end
+NOTE: villosum (identical to ayavacense) is ignored but added at the end
+NOTE: recognitum (identical to ayavacense) is ignored but added at the end
+NOTE: erosum (identical to dilatatum) is ignored but added at the end
+NOTE: adenophoru (identical to dilatatum) is ignored but added at the end
+NOTE: fordiae (identical to dilatatum) is ignored but added at the end
+NOTE: hallii (identical to obtectum) is ignored but added at the end
+NOTE: microcarpu (identical to obtectum) is ignored but added at the end
+NOTE: discolor (identical to obtectum) is ignored but added at the end
+NOTE: stipitatum (identical to obtectum) is ignored but added at the end
+NOTE: pichinchen (identical to obtectum) is ignored but added at the end
+NOTE: ciliatum (identical to obtectum) is ignored but added at the end
+NOTE: oliganthum (identical to erubescens) is ignored but added at the end
+NOTE: chingii (identical to erubescens) is ignored but added at the end
+NOTE: brevitubum (identical to erubescens) is ignored but added at the end
+NOTE: buddleifol (identical to chinshanen) is ignored but added at the end
+NOTE: congestum (identical to chinshanen) is ignored but added at the end
+NOTE: rhytidophy (identical to chinshanen) is ignored but added at the end
+NOTE: carlesii (identical to lantana) is ignored but added at the end
+NOTE: maculatum (identical to lantana) is ignored but added at the end
+NOTE: molle (identical to rafinesqui) is ignored but added at the end
+NOTE: inopinatum (identical to sambucinum) is ignored but added at the end
+Alignment was printed to clean_aligned.phylip.uniqueseq.phy
+
+For your convenience alignment with unique sequences printed to clean_aligned.phylip.uniqueseq.phy
+
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.006 seconds
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+Perform fast likelihood tree search using GTR+I+G model...
+Estimate model parameters (epsilon = 5.000)
+Perform nearest neighbor interchange...
+Optimizing NNI: done in 0.0585884 secs using 320% CPU
+Estimate model parameters (epsilon = 1.000)
+1. Initial log-likelihood: -3090.591
+2. Current log-likelihood: -3088.762
+3. Current log-likelihood: -3087.211
+4. Current log-likelihood: -3085.793
+5. Current log-likelihood: -3084.523
+6. Current log-likelihood: -3083.408
+7. Current log-likelihood: -3082.350
+8. Current log-likelihood: -3081.275
+9. Current log-likelihood: -3080.179
+10. Current log-likelihood: -3079.075
+11. Current log-likelihood: -3077.968
+12. Current log-likelihood: -3076.865
+13. Current log-likelihood: -3075.773
+14. Current log-likelihood: -3074.697
+15. Current log-likelihood: -3073.640
+16. Current log-likelihood: -3072.610
+Optimal log-likelihood: -3071.474
+Rate parameters:  A-C: 0.90746  A-G: 1.66926  A-T: 0.77117  C-G: 1.38140  C-T: 1.31092  G-T: 1.00000
+Base frequencies:  A: 0.265  C: 0.200  G: 0.252  T: 0.283
+Proportion of invariable sites: 0.725
+Gamma shape alpha: 0.184
+Parameters optimization took 16 rounds (0.238 sec)
+Time for fast ML tree search: 0.352 seconds
+
+NOTE: ModelFinder requires 9 MB RAM!
+ModelFinder will test up to 484 DNA models (sample size: 1332) ...
+ No. Model         -LnL         df  AIC          AICc         BIC
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  1  GTR+F         3266.821     237 7007.641     7110.760     8238.723
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  2  GTR+F+I       3078.227     238 6632.455     6736.539     7868.731
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  3  GTR+F+G4      3141.410     238 6758.821     6862.905     7995.097
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  4  GTR+F+I+G4    3061.871     239 6601.742     6706.797     7843.212
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  5  GTR+F+R2      3056.047     239 6590.095     6695.150     7831.565
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+  6  GTR+F+R3      3056.005     241 6594.010     6701.023     7845.869
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 14  GTR+F+I+I+R2  3054.711     240 6589.422     6695.454     7836.087
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 15  GTR+F+I+I+R3  3053.245     242 6590.490     6698.490     7847.544
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 27  SYM+R2        3067.809     236 6607.619     6709.777     7833.506
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 36  SYM+I+I+R2    3066.646     237 6607.292     6710.411     7838.374
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 49  TVM+F+R2      3056.020     238 6588.041     6692.125     7824.317
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 58  TVM+F+I+I+R2  3054.730     239 6587.460     6692.515     7828.931
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 71  TVMe+R2       3067.908     235 6605.816     6707.021     7826.509
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 80  TVMe+I+I+R2   3066.734     236 6605.467     6707.626     7831.355
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+ 93  TIM3+F+R2     3056.743     237 6587.486     6690.604     7818.567
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+102  TIM3+F+I+I+R2 3055.632     238 6587.265     6691.349     7823.541
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+115  TIM3e+R2      3068.318     234 6604.637     6704.892     7820.135
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+124  TIM3e+I+I+R2  3067.357     235 6604.714     6705.918     7825.407
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+137  TIM2+F+R2     3056.768     237 6587.536     6690.655     7818.618
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+146  TIM2+F+I+I+R2 3055.521     238 6587.042     6691.126     7823.318
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+159  TIM2e+R2      3067.847     234 6603.694     6703.949     7819.192
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+168  TIM2e+I+I+R2  3066.699     235 6603.398     6704.603     7824.091
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+181  TIM+F+R2      3057.318     237 6588.635     6691.754     7819.717
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+190  TIM+F+I+I+R2  3056.290     238 6588.581     6692.665     7824.857
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+203  TIMe+R2       3068.281     234 6604.562     6704.817     7820.060
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+212  TIMe+I+I+R2   3067.322     235 6604.644     6705.848     7825.337
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+225  TPM3u+F+R2    3056.732     236 6585.465     6687.623     7811.352
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+234  TPM3u+F+I+I+R2 3055.637     237 6585.274     6688.393     7816.356
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+247  TPM3+R2       3068.413     233 6602.826     6702.137     7813.130
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+256  TPM3+I+I+R2   3067.414     234 6602.828     6703.083     7818.326
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+269  TPM2u+F+R2    3056.767     236 6585.535     6687.694     7811.422
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+278  TPM2u+F+I+I+R2 3055.534     237 6585.069     6688.188     7816.150
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+291  TPM2+R2       3067.952     233 6601.905     6701.216     7812.209
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+300  TPM2+I+I+R2   3066.784     234 6601.568     6701.823     7817.066
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+313  K3Pu+F+R2     3057.315     236 6586.630     6688.789     7812.517
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+322  K3Pu+F+I+I+R2 3056.291     237 6586.582     6689.701     7817.664
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+335  K3P+R2        3068.379     233 6602.759     6702.070     7813.063
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+344  K3P+I+I+R2    3067.379     234 6602.759     6703.014     7818.257
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+357  TN+F+R2       3057.423     236 6586.846     6689.005     7812.733
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+366  TN+F+I+I+R2   3056.381     237 6586.761     6689.880     7817.843
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+379  TNe+R2        3068.317     233 6602.635     6701.946     7812.939
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+388  TNe+I+I+R2    3067.360     234 6602.720     6702.976     7818.219
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+401  HKY+F+R2      3057.423     235 6584.846     6686.050     7805.539
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+410  HKY+F+I+I+R2  3056.382     236 6584.765     6686.924     7810.652
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+423  K2P+R2        3068.416     232 6600.833     6699.206     7805.942
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+432  K2P+I+I+R2    3067.417     233 6600.835     6700.146     7811.138
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+445  F81+F+R2      3060.396     234 6588.793     6689.048     7804.291
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+454  F81+F+I+I+R2  3059.364     235 6588.728     6689.933     7809.421
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+467  JC+R2         3071.389     231 6604.778     6702.218     7804.693
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+476  JC+I+I+R2     3070.398     232 6604.796     6703.169     7809.905
+Akaike Information Criterion:           HKY+F+I+I+R2
+Corrected Akaike Information Criterion: HKY+F+R2
+Bayesian Information Criterion:         F81+F+R2
+Best-fit model: F81+F+R2 chosen according to BIC
+
+All model information printed to clean_aligned.phylip.model.gz
+CPU time for ModelFinder: 15.391 seconds (0h:0m:15s)
+Wall-clock time for ModelFinder: 5.413 seconds (0h:0m:5s)
+Generating 5000 samples for ultrafast bootstrap (seed: 689734)...
+
+NOTE: 4 MB RAM (0 GB) is required!
+WARNING: Number of threads seems too high for short alignments. Use -T AUTO to determine best number of threads.
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -3060.396
+Optimal log-likelihood: -3060.395
+Rate parameters:  A-C: 1.00000  A-G: 1.00000  A-T: 1.00000  C-G: 1.00000  C-T: 1.00000  G-T: 1.00000
+Base frequencies:  A: 0.265  C: 0.200  G: 0.252  T: 0.283
+Site proportion and rates:  (0.973,0.269) (0.027,27.200)
+Parameters optimization took 1 rounds (0.019 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 0.0153872 secs using 304.6% CPU
+Computing ML distances took 0.018410 sec (of wall-clock time) 0.046875 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 0.0001433 secs
+Constructing RapidNJ tree: done in 0.0018812 secs
+Computing RapidNJ tree took 0.004471 sec (of wall-clock time) 0.000000 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -3103.977
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 0.576 second
+Computing log-likelihood of 98 initial trees ... 0.315 seconds
+Current best score: -3035.850
+
+Do NNI search on 20 best initial trees
+Optimizing NNI: done in 0.178045 secs using 315.9% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -3034.394
+Optimizing NNI: done in 0.180589 secs using 276.9% CPU
+Optimizing NNI: done in 0.175137 secs using 285.5% CPU
+Optimizing NNI: done in 0.167366 secs using 289.4% CPU
+Optimizing NNI: done in 0.148528 secs using 273.5% CPU
+Optimizing NNI: done in 0.265906 secs using 282.1% CPU
+Optimizing NNI: done in 0.17858 secs using 280% CPU
+Optimizing NNI: done in 0.155924 secs using 270.6% CPU
+Optimizing NNI: done in 0.155289 secs using 291.8% CPU
+Optimizing NNI: done in 0.211343 secs using 280.9% CPU
+Iteration 10 / LogL: -3047.453 / Time: 0h:0m:2s
+Optimizing NNI: done in 0.152936 secs using 296.3% CPU
+Optimizing NNI: done in 0.14601 secs using 299.6% CPU
+Optimizing NNI: done in 0.133044 secs using 270.1% CPU
+Optimizing NNI: done in 0.154361 secs using 273.3% CPU
+Optimizing NNI: done in 0.211155 secs using 273.8% CPU
+Optimizing NNI: done in 0.184846 secs using 270.5% CPU
+Optimizing NNI: done in 0.199287 secs using 297.9% CPU
+Optimizing NNI: done in 0.176623 secs using 300.8% CPU
+Optimizing NNI: done in 0.150597 secs using 269.8% CPU
+Optimizing NNI: done in 0.0496671 secs using 283.1% CPU
+Iteration 20 / LogL: -3048.421 / Time: 0h:0m:4s
+Finish initializing candidate tree set (20)
+Current best tree score: -3034.394 / CPU time: 4.365
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Optimizing NNI: done in 0.172016 secs using 299.8% CPU
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 21: -3034.092
+Optimizing NNI: done in 0.221137 secs using 268.5% CPU
+Optimizing NNI: done in 0.205464 secs using 289% CPU
+Optimizing NNI: done in 0.207661 secs using 308.5% CPU
+Optimizing NNI: done in 0.256466 secs using 286.3% CPU
+Optimizing NNI: done in 0.201349 secs using 302.6% CPU
+Optimizing NNI: done in 0.184036 secs using 297.2% CPU
+Optimizing NNI: done in 0.198124 secs using 299.7% CPU
+Optimizing NNI: done in 0.125108 secs using 262.3% CPU
+Optimizing NNI: done in 0.227224 secs using 268.2% CPU
+Iteration 30 / LogL: -3034.436 / Time: 0h:0m:6s (0h:0m:21s left)
+Optimizing NNI: done in 0.127378 secs using 294.4% CPU
+Optimizing NNI: done in 0.141847 secs using 275.4% CPU
+Optimizing NNI: done in 0.16885 secs using 296.1% CPU
+Optimizing NNI: done in 0.168666 secs using 305.7% CPU
+Optimizing NNI: done in 0.146109 secs using 320.8% CPU
+Optimizing NNI: done in 0.253133 secs using 290.1% CPU
+Optimizing NNI: done in 0.212088 secs using 294.7% CPU
+Optimizing NNI: done in 0.166526 secs using 309.6% CPU
+Optimizing NNI: done in 0.148619 secs using 262.8% CPU
+Optimizing NNI: done in 0.208778 secs using 291.9% CPU
+Iteration 40 / LogL: -3045.521 / Time: 0h:0m:8s (0h:0m:18s left)
+Optimizing NNI: done in 0.184434 secs using 288% CPU
+Optimizing NNI: done in 0.164462 secs using 275.5% CPU
+Optimizing NNI: done in 0.204799 secs using 289.9% CPU
+Optimizing NNI: done in 0.166188 secs using 310.3% CPU
+Optimizing NNI: done in 0.248186 secs using 289.6% CPU
+Optimizing NNI: done in 0.204038 secs using 283.3% CPU
+Optimizing NNI: done in 0.129008 secs using 290.7% CPU
+Optimizing NNI: done in 0.232446 secs using 295.8% CPU
+Optimizing NNI: done in 0.154069 secs using 304.2% CPU
+Optimizing NNI: done in 0.27127 secs using 311% CPU
+Iteration 50 / LogL: -3037.164 / Time: 0h:0m:10s (0h:0m:15s left)
+Log-likelihood cutoff on original alignment: -3076.819
+Optimizing NNI: done in 0.211849 secs using 287.6% CPU
+Optimizing NNI: done in 0.217854 secs using 294.1% CPU
+Optimizing NNI: done in 0.189591 secs using 296.7% CPU
+Optimizing NNI: done in 0.187285 secs using 292% CPU
+Optimizing NNI: done in 0.166256 secs using 300.7% CPU
+Optimizing NNI: done in 0.209266 secs using 306.1% CPU
+Optimizing NNI: done in 0.106191 secs using 264.9% CPU
+Optimizing NNI: done in 0.166319 secs using 291.2% CPU
+Optimizing NNI: done in 0.111172 secs using 295.2% CPU
+Optimizing NNI: done in 0.207581 secs using 308.6% CPU
+Iteration 60 / LogL: -3034.111 / Time: 0h:0m:14s (0h:0m:14s left)
+Optimizing NNI: done in 0.204802 secs using 282.3% CPU
+Optimizing NNI: done in 0.219569 secs using 298.9% CPU
+Optimizing NNI: done in 0.164513 secs using 303.9% CPU
+Optimizing NNI: done in 0.205987 secs using 288.2% CPU
+Optimizing NNI: done in 0.273889 secs using 279.5% CPU
+Optimizing NNI: done in 0.129832 secs using 264.8% CPU
+Optimizing NNI: done in 0.223573 secs using 265.6% CPU
+Optimizing NNI: done in 0.215871 secs using 289.5% CPU
+Optimizing NNI: done in 0.231165 secs using 290.6% CPU
+Optimizing NNI: done in 0.223585 secs using 300.5% CPU
+Iteration 70 / LogL: -3034.112 / Time: 0h:0m:16s (0h:0m:12s left)
+Optimizing NNI: done in 0.208877 secs using 284.3% CPU
+Optimizing NNI: done in 0.179071 secs using 270.5% CPU
+Optimizing NNI: done in 0.24398 secs using 307.4% CPU
+Optimizing NNI: done in 0.219012 secs using 299.6% CPU
+Optimizing NNI: done in 0.19314 secs using 315.5% CPU
+Optimizing NNI: done in 0.195101 secs using 280.3% CPU
+Optimizing NNI: done in 0.204587 secs using 297.9% CPU
+Optimizing NNI: done in 0.200854 secs using 287.8% CPU
+Optimizing NNI: done in 0.229428 secs using 286% CPU
+Optimizing NNI: done in 0.245399 secs using 273.8% CPU
+Iteration 80 / LogL: -3034.444 / Time: 0h:0m:18s (0h:0m:9s left)
+Optimizing NNI: done in 0.219203 secs using 270.9% CPU
+Optimizing NNI: done in 0.271378 secs using 276.4% CPU
+Optimizing NNI: done in 0.226808 secs using 296.2% CPU
+Optimizing NNI: done in 0.161504 secs using 290.2% CPU
+Optimizing NNI: done in 0.199084 secs using 306.1% CPU
+Optimizing NNI: done in 0.176558 secs using 309.7% CPU
+Optimizing NNI: done in 0.199553 secs using 305.4% CPU
+Optimizing NNI: done in 0.235857 secs using 258.4% CPU
+Optimizing NNI: done in 0.177398 secs using 273% CPU
+Optimizing NNI: done in 0.228796 secs using 300.5% CPU
+Iteration 90 / LogL: -3034.107 / Time: 0h:0m:21s (0h:0m:7s left)
+Optimizing NNI: done in 0.243557 secs using 288.7% CPU
+Optimizing NNI: done in 0.175338 secs using 294.1% CPU
+Optimizing NNI: done in 0.219901 secs using 291.3% CPU
+Optimizing NNI: done in 0.228385 secs using 307.9% CPU
+Optimizing NNI: done in 0.190635 secs using 303.3% CPU
+Optimizing NNI: done in 0.19862 secs using 275.3% CPU
+Optimizing NNI: done in 0.202301 secs using 293.5% CPU
+Optimizing NNI: done in 0.182483 secs using 282.6% CPU
+Optimizing NNI: done in 0.224589 secs using 292.2% CPU
+Optimizing NNI: done in 0.200068 secs using 289% CPU
+Iteration 100 / LogL: -3034.122 / Time: 0h:0m:23s (0h:0m:5s left)
+Log-likelihood cutoff on original alignment: -3076.819
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.998
+Optimizing NNI: done in 0.230171 secs using 271.5% CPU
+Optimizing NNI: done in 0.199192 secs using 274.5% CPU
+Optimizing NNI: done in 0.219139 secs using 292.3% CPU
+Optimizing NNI: done in 0.159857 secs using 293.2% CPU
+Optimizing NNI: done in 0.256894 secs using 273.7% CPU
+Optimizing NNI: done in 0.177823 secs using 290% CPU
+Optimizing NNI: done in 0.195605 secs using 303.5% CPU
+Optimizing NNI: done in 0.179356 secs using 304.9% CPU
+Optimizing NNI: done in 0.197029 secs using 269.6% CPU
+Optimizing NNI: done in 0.210299 secs using 289.8% CPU
+Iteration 110 / LogL: -3036.251 / Time: 0h:0m:27s (0h:0m:22s left)
+Optimizing NNI: done in 0.221813 secs using 302.9% CPU
+Optimizing NNI: done in 0.207264 secs using 278.9% CPU
+Optimizing NNI: done in 0.199379 secs using 290% CPU
+Optimizing NNI: done in 0.233726 secs using 274.1% CPU
+Optimizing NNI: done in 0.20178 secs using 302% CPU
+Optimizing NNI: done in 0.17819 secs using 315.7% CPU
+Optimizing NNI: done in 0.156056 secs using 290.4% CPU
+Optimizing NNI: done in 0.194401 secs using 305.4% CPU
+Optimizing NNI: done in 0.154544 secs using 303.3% CPU
+Optimizing NNI: done in 0.188288 secs using 290.4% CPU
+Iteration 120 / LogL: -3063.612 / Time: 0h:0m:29s (0h:0m:19s left)
+Optimizing NNI: done in 0.222298 secs using 288.2% CPU
+Optimizing NNI: done in 0.221009 secs using 282.8% CPU
+TREE SEARCH COMPLETED AFTER 122 ITERATIONS / Time: 0h:0m:30s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -3034.092
+Optimal log-likelihood: -3034.093
+Rate parameters:  A-C: 1.00000  A-G: 1.00000  A-T: 1.00000  C-G: 1.00000  C-T: 1.00000  G-T: 1.00000
+Base frequencies:  A: 0.265  C: 0.200  G: 0.252  T: 0.283
+Site proportion and rates:  (0.974,0.286) (0.026,28.155)
+Parameters optimization took 1 rounds (0.020 sec)
+BEST SCORE FOUND : -3034.093
+Creating bootstrap support values...
+Split supports printed to NEXUS file clean_aligned.phylip.splits.nex
+Total tree length: 0.143
+
+Total number of iterations: 122
+CPU time used for tree search: 82.312 sec (0h:1m:22s)
+Wall-clock time used for tree search: 29.858 sec (0h:0m:29s)
+Total CPU time used: 84.875 sec (0h:1m:24s)
+Total wall-clock time used: 31.301 sec (0h:0m:31s)
+
+Computing bootstrap consensus tree...
+Reading input file clean_aligned.phylip.splits.nex...
+116 taxa and 2354 splits.
+Consensus tree written to clean_aligned.phylip.contree
+Reading input trees file clean_aligned.phylip.contree
+Log-likelihood of consensus tree: -3034.293
+
+Analysis results written to: 
+  IQ-TREE report:                clean_aligned.phylip.iqtree
+  Maximum-likelihood tree:       clean_aligned.phylip.treefile
+  Likelihood distances:          clean_aligned.phylip.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          clean_aligned.phylip.splits.nex
+  Consensus tree:                clean_aligned.phylip.contree
+  Screen log file:               clean_aligned.phylip.log
+
+Date and Time: Fri Jun 09 11:38:23 2023
